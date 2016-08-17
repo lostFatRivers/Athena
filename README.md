@@ -5,6 +5,6 @@
 
 以前的wiki, 有时还是挺有用 https://github.com/serverBiatch/teamWiki/issues
 
-zoll里的wiki, 有时也挺有用 https://github.com/serverBiatch/teamWiki/issues
+zoll里的wiki, 有时也挺有用 https://github.com/lostFatRivers/zoll/issues
 
-GlobalGame文档大爆发, 有用 https://github.com/serverBiatch/teamWiki/issues
+GlobalGame文档大爆发, 有用 https://github.com/lostFatRivers/GlobalGame/tree/master/markdown
