@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<hibernate-configuration>
+	<session-factory>
+		<property name="dialect">
+			org.hibernate.dialect.MySQLDialect
+		</property>
+		
+		<!-- 基础属性设置-->
+		<property name="show_sql">false</property>
+		<property name="connection.useUnicode">true</property>
+		<property name="connection.characterEncoding">UTF-8</property>
+		<property name="format_sql">true</property>
+		<property name="connection.provider_class">com.zaxxer.hikari.hibernate.HikariConnectionProvider</property>
+		
+		<!-- 连接池 -->
+		<property name="hibernate.hikari.minimumIdle">5</property>
+		<property name="hibernate.hikari.maximumPoolSize">10</property>
+		<property name="hibernate.hikari.idleTimeout">30000</property>
+		<property name="hibernate.hikari.dataSourceClassName">com.mysql.jdbc.jdbc2.optional.MysqlDataSource</property>
+		<property name="hibernate.hikari.dataSource.url">jdbc:mysql://localhost:3306/dbtest1</property>
+		<property name="hibernate.hikari.dataSource.user">root</property>
+		<property name="hibernate.hikari.dataSource.password"></property>
+
+		<mapping class="com.zoll.db.UserEntity"/>
+	</session-factory>
+</hibernate-configuration>
