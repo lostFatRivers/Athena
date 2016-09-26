@@ -1,5 +1,0 @@
-INDEX VERSION 1.127+D:\workspaceForGit\Athena\.metadata\.plugins\org.eclipse.jdt.core
-1896386436.index
-323004597.index
-2677146811.index
-3649999906.index

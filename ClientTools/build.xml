@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="hawk" default="publish" basedir=".">
+	<!--工程所在目录-->
+	<property name="project.path" value="./"/> 
+    <!--发布目录中-->
+    <property name="game.dist.dir" value="${project.path}/target"/>
+    <property name="game.dist.lib" value="${game.dist.dir}/lib"/>
+  
+	<property name="game.src.dir" value="${project.path}/src"/>
+  
+    <property name="app.name" value="clientTools"/>
+    <property name="app.game.jar" value="${app.name}.jar"/>
+
+    <!--app用到的lib-->
+    <property name="lib.dir" value="${project.path}/lib"/>
+	
+    <!--app的build目录中-->
+    <property name="build.dir" value="${project.path}/build" />
+    <property name="build.game.classes" value="${build.dir}/game/classes"/>
+    <property name="build.lib" value="${build.dir}/lib"/>
+    <property name="build.config" value="${build.dir}/config"/>   
+	
+    <path id="lib">
+	<fileset dir="${lib.dir}">
+	    <include name="*.jar"/>
+	</fileset>
+    </path>
+
+    <target name="init">
+        <!--清除以前目录-->
+        <delete dir="${build.dir}" failonerror="false" />
+        <!--准备目录-->
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${build.game.classes}"/>
+        <mkdir dir="${build.lib}"/>
+        <mkdir dir="${build.config}"/>
+        <mkdir dir="${game.dist.lib}"/> 
+        <mkdir dir="${game.dist.dir}"/>
+    </target>
+
+    <target name="build_game" depends="init">
+        <!--编译-->
+        <javac srcdir="${game.src.dir};" destdir="${build.game.classes}" fork="true" memorymaximumsize="500M" includeAntRuntime="false" encoding="utf-8" target="1.7" nowarn="on" debug="true" debuglevel="lines,source"  deprecation="false" failonerror="true" >
+      	    <compilerarg value="-Xlint:unchecked"/>
+            <classpath refid="lib"/>
+        </javac>
+
+		<copy file="${game.src.dir}/log4j2.xml" todir="${game.dist.dir}" overwrite="true"/>
+
+		<copy file="${project.path}/config/toolsCfg.properties" todir="${game.dist.dir}/config" overwrite="true"/>
+    </target>
+
+    <target name="create_game_jar" depends="build_game">
+        <jar basedir="${build.game.classes}" destfile="${game.dist.dir}/${app.game.jar}">
+            <manifest>
+                <attribute name="Main-Class" value="com.zoll.ToolsMain"/>
+                <attribute name="Class-Path" value=". lib/ 
+					lib/log4j-api-2.6.2.jar
+					lib/log4j-core-2.6.2.jar
+					lib/log4j-slf4j-impl-2.6.2.jar
+					lib/slf4j-api-1.7.21.jar" />
+            </manifest>
+        </jar>
+        <delete dir="${build.lib}"/>
+        <mkdir dir="${build.lib}"/>
+
+    </target>
+
+    <target name="publish" depends="create_game_jar">
+	<copy todir="${game.dist.lib}" overwrite="true" >
+            <fileset dir="${lib.dir}">
+            </fileset>             
+        </copy>
+    </target>
+
+    <target name="clean">
+        <delete dir="${build.dir}" failonerror="false" />
+        <delete dir="${dist.dir}"  failonerror="false"/>
+     </target>
+</project> 
