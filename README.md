@@ -8,3 +8,5 @@
 zoll里的wiki, 有时也挺有用 https://github.com/lostFatRivers/zoll/issues
 
 GlobalGame文档大爆发, 有用 https://github.com/lostFatRivers/GlobalGame/tree/master/markdown
+
+Crazyjohn 的wiki, 有用 https://github.com/crazyjohn/crazyjohn.github.io
