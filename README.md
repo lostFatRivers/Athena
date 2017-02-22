@@ -7,6 +7,6 @@
 
 zoll里的wiki, 有时也挺有用 https://github.com/lostFatRivers/zoll/issues
 
-GlobalGame文档大爆发, 有用 https://github.com/lostFatRivers/GlobalGame/tree/master/markdown
+GraghOfOrigin文档大爆发, 有用 https://github.com/lostFatRivers/GraghOfOrigin/tree/master/Document
 
 Crazyjohn 的wiki, 有用 https://github.com/crazyjohn/crazyjohn.github.io
