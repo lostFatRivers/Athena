@@ -1,6 +1,6 @@
 # Athena
 
-貌似没有完成上条任务...
+使用 Vertx 工具搭建高性能应用栈, 包括 Client, Server, BI 三个部分.
 
 以前的wiki, 有时还是挺有用 https://github.com/serverBiatch/teamWiki/issues
 
