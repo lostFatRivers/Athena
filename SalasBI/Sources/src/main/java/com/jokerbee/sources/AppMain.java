@@ -14,7 +14,6 @@ public class AppMain {
         VertxOptions options = new VertxOptions();
         options.setWorkerPoolSize(10);
         Vertx vertx = Vertx.vertx(options);
-        vertx.eventBus().registerDefaultCodec(InnerMessage.class, new InnerMessageCodec());
         vertx.deployVerticle("com.jokerbee.sources.BootVerticle", res -> {
             if (res.succeeded()) {
                 logger.info("BI sources collector start OK.");

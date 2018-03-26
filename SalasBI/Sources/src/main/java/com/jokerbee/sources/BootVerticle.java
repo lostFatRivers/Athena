@@ -24,25 +24,15 @@ public class BootVerticle extends AbstractVerticle {
     }
 
     private Future<Void> configLoad() {
-        vertx.eventBus().consumer("protocol", msg -> {
-            JsonObject json = (JsonObject) msg.body();
-            logger.info("message cast ok:{}", json);
-            JsonObject result = new JsonObject();
-            result.put("key1", "HELLO").put("key2", "BAD");
-            msg.reply(result);
-        });
         return Future.future();
     }
 
     private Future<Void> deployCollectors() {
-        JsonObject request = new JsonObject();
-        request.put("key1", "HELLO").put("key2", "BAD");
-        vertx.eventBus().send("protocol", request, res -> {
+        vertx.deployVerticle("com.jokerbee.sources.http.HttpReportMonitor", res -> {
             if (res.succeeded()) {
-                JsonObject json = (JsonObject) res.result().body();
-                logger.info("send message result:{}", json);
+                logger.info("Http report monitor deploy success.");
             } else {
-                res.cause().printStackTrace();
+                logger.info("Http report monitor deploy failed. {}", res.cause());
             }
         });
         return Future.future();
