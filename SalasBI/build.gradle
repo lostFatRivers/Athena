@@ -20,7 +20,8 @@ configure(allprojects) {
                 "org.apache.logging.log4j:log4j-core:${log4jVersion}",
                 "org.apache.logging.log4j:log4j-slf4j-impl:${log4jVersion}")
 
-        compile ("io.vertx:vertx-core:${vertxVersion}")
+        compile ("io.vertx:vertx-core:${vertxVersion}",
+                 "io.vertx:vertx-codegen:${vertxVersion}")
 
         compile ("commons-io:commons-io:${commonsVersion}",
                 "commons-lang:commons-lang:${commonsVersion}")
