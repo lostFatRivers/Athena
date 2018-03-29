@@ -1,12 +1,8 @@
 package com.jokerbee.sources;
 
-import com.jokerbee.sources.protocol.InnerMessage;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.CompositeFuture;
-import io.vertx.core.Context;
 import io.vertx.core.Future;
-import io.vertx.core.json.JsonObject;
-import io.vertx.core.shareddata.SharedData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,24 +13,32 @@ public class BootVerticle extends AbstractVerticle {
     private static Logger logger = LoggerFactory.getLogger("FILE");
 
     @Override
-    public void start() throws Exception {
-        Future<Void> fu1 = configLoad();
-        Future<Void> fu2 = deployCollectors();
-        CompositeFuture.all(fu1, fu2);
-    }
-
-    private Future<Void> configLoad() {
-        return Future.future();
-    }
-
-    private Future<Void> deployCollectors() {
-        vertx.deployVerticle("com.jokerbee.sources.http.HttpReportMonitor", res -> {
+    public void start(Future<Void> startFuture) throws Exception {
+        Future<String> fu1 = configLoad();
+        Future<String> fu2 = deployCollectors();
+        Future<String> fu3 = deployDBService();
+        CompositeFuture.all(fu1, fu2, fu3).setHandler(res -> {
             if (res.succeeded()) {
-                logger.info("Http report monitor deploy success.");
+                startFuture.complete();
             } else {
-                logger.info("Http report monitor deploy failed. {}", res.cause());
+                startFuture.fail(res.cause());
             }
         });
+    }
+
+    private Future<String> configLoad() {
         return Future.future();
+    }
+
+    private Future<String> deployCollectors() {
+        Future<String> future = Future.future();
+        //vertx.deployVerticle("com.jokerbee.sources.http.HttpReportMonitor", future);
+        return future;
+    }
+
+    private Future<String> deployDBService() {
+        Future<String> future = Future.future();
+        vertx.deployVerticle("com.jokerbee.sources.db.PostgresDBService", future);
+        return future;
     }
 }

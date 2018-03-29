@@ -48,13 +48,15 @@ configure(allprojects) {
 project('Surface') {
     dependencies {
         compile("io.vertx:vertx-web:${vertxVersion}",
-                "io.vertx:vertx-web-templ-jade:${vertxVersion}",)
+                "io.vertx:vertx-web-templ-jade:${vertxVersion}")
     }
 }
 
 project('Sources') {
     apply plugin: 'groovy'
     dependencies {
-        compile("io.vertx:vertx-web:${vertxVersion}")
+        compile("io.vertx:vertx-web:${vertxVersion}",
+                "io.vertx:vertx-mysql-postgresql-client:${vertxVersion}",
+                "io.vertx:vertx-config:${vertxVersion}")
     }
 }

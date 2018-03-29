@@ -1,0 +1,14 @@
+{
+  "dbConfig" : {
+    "host" : "127.0.0.1",
+    "port" : 5432,
+    "maxPoolSize" : 9,
+    "username" : "joker",
+    "password" : "495669631",
+    "database" : "salasDB",
+    "charset" : "UTF-8",
+    "queryTimeout" : 5000
+    // "sslMode" : <"disable"|"prefer"|"require"|"verify-ca"|"verify-full">,
+    // "sslRootCert" : <path to file with certificate>
+  }
+}

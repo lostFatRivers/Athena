@@ -4,6 +4,7 @@ import com.jokerbee.sources.common.Constants;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpMethod;
+import io.vertx.core.json.JsonObject;
 import io.vertx.core.net.NetSocket;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -30,6 +31,7 @@ import java.util.List;
  * <br/>
  * HEAD：获取资源的元数据 <br/>
  * OPTIONS：获取信息，关于资源的哪些属性是客户端可以改变的 <br/>
+ *
  */
 public class HttpReportMonitor extends AbstractVerticle {
     private final Logger LOG = LoggerFactory.getLogger("Monitor-http");
@@ -65,6 +67,13 @@ public class HttpReportMonitor extends AbstractVerticle {
         return rtc -> {
             List<String> pathList = getPathList(rtc.normalisedPath());
             System.out.println(pathList);
+            getVertx().eventBus().send("GetData", new JsonObject().put("path", pathList), res -> {
+                if (res.succeeded()) {
+                    LOG.info("found data:{}", res.result());
+                } else {
+                    LOG.info("data not found:{}", res.cause());
+                }
+            });
             rtc.response().end(Constants.END_CODE);
         };
     }
