@@ -42,7 +42,7 @@ configure(allprojects) {
     }
 
     jar {
-        exclude('/log4j2.xml', '/config')
+        exclude('/log4j2.xml', '/config', '/conf')
     }
 }
 
@@ -55,6 +55,7 @@ project('Surface') {
 
 project('Sources') {
     apply plugin: 'groovy'
+
     dependencies {
         compile("io.vertx:vertx-web:${vertxVersion}",
                 "io.vertx:vertx-mysql-postgresql-client:${vertxVersion}",

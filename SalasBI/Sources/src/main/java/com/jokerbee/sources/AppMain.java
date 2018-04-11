@@ -31,6 +31,10 @@ public class AppMain {
             if (res.succeeded()) {
                 AsyncMap<Object, Object> result = res.result();
                 logger.info("shared map:{}", result);
+                logger.info("BI sources collector start OK.");
+            } else {
+                logger.error("BI sources collector start error.", res.cause());
+                vertx.close();
             }
         });
     }
