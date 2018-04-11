@@ -1,9 +1,13 @@
 package com.jokerbee.sources.http;
 
+import com.jokerbee.sources.BootVerticle;
 import com.jokerbee.sources.common.Constants;
+import com.jokerbee.sources.db.PostgresDBService;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpMethod;
+import io.vertx.core.impl.Utils;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.net.NetSocket;
 import io.vertx.ext.web.Router;
@@ -12,6 +16,7 @@ import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CookieHandler;
 import io.vertx.ext.web.handler.SessionHandler;
 import io.vertx.ext.web.sstore.LocalSessionStore;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,8 +86,16 @@ public class HttpReportMonitor extends AbstractVerticle {
     private Handler<RoutingContext> postSource() {
         return rtc -> {
             List<String> pathList = getPathList(rtc.normalisedPath());
-            System.out.println(pathList);
             rtc.response().end(Constants.END_CODE);
+            String body = rtc.getBodyAsString();
+            String shardKey = pathList.get(0);
+            int id = Math.abs(System.identityHashCode(shardKey) % BootVerticle.COLLECTOR_SIZE);
+            JsonObject message = new JsonObject();
+            message.put("paths", new JsonArray(pathList));
+            if (StringUtils.isNotEmpty(body)) {
+                message.put("body", body);
+            }
+            vertx.eventBus().send(PostgresDBService.DB_CONSUMER_NAME + id, message);
         };
     }
 

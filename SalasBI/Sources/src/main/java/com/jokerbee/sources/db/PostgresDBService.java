@@ -1,17 +1,31 @@
 package com.jokerbee.sources.db;
 
+import com.jokerbee.sources.utils.TimeUtil;
 import io.vertx.config.ConfigRetriever;
 import io.vertx.core.*;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.asyncsql.AsyncSQLClient;
 import io.vertx.ext.asyncsql.PostgreSQLClient;
-import io.vertx.ext.sql.ResultSet;
 import io.vertx.ext.sql.SQLConnection;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class PostgresDBService extends AbstractVerticle {
+    private volatile static AtomicInteger counter = new AtomicInteger(0);
+    private final int ID = counter.getAndIncrement();
+    public static final String DB_CONSUMER_NAME = "ReportData-";
+
     private final Logger LOG = LoggerFactory.getLogger("FILE");
+    private Map<String, Map<Integer, JsonObject>> cache = new HashMap<>();
+
+    private AsyncSQLClient sqlClient;
 
     @Override
     public void start(Future<Void> startFuture) throws Exception {
@@ -28,9 +42,10 @@ public class PostgresDBService extends AbstractVerticle {
 
     private Future<Void> deployConsumers() {
         Vertx vertx = getVertx();
-        vertx.eventBus().consumer("ReportData", message -> {
-            Object body = message.body();
+        vertx.eventBus().consumer(DB_CONSUMER_NAME + ID, message -> {
+            JsonObject body = JsonObject.mapFrom(message.body());
             LOG.info("receive message:{}", body);
+            collectData(body);
         });
         return Future.future();
     }
@@ -46,34 +61,128 @@ public class PostgresDBService extends AbstractVerticle {
         if (res.succeeded()) {
             JsonObject result = res.result();
             JsonObject dbConfig = result.getJsonObject("dbConfig");
-            AsyncSQLClient sqlClient = PostgreSQLClient.createShared(getVertx(), dbConfig, "PgSql-Pool");
-            sqlClient.getConnection(res2 -> {
-                connectionResultHandler(res2, startFuture);
-            });
             LOG.info("find db config:{}", dbConfig);
+            sqlClient = PostgreSQLClient.createShared(getVertx(), dbConfig, "PgSql-Pool");
+            checkConnection(startFuture);
         } else {
             startFuture.fail("db config not found");
         }
     }
 
-    private void connectionResultHandler(AsyncResult<SQLConnection> res, Future<Void> startFuture) {
-        if (res.succeeded()) {
-            SQLConnection connection = res.result();
-            connection.query("select count(*) from normal;", res2 -> {
-                queryResultHandler(res2, startFuture);
-            });
-        } else {
-            startFuture.fail("create shared client pool failed.");
-        }
+    private void checkConnection(Future<Void> startFuture) {
+        sqlClient.getConnection(res -> {
+            if (res.succeeded()) {
+                SQLConnection connection = res.result();
+                connection.query("select count(*) from normal;", res2 -> {
+                    if (res.succeeded()) {
+                        LOG.info("DB connect success. [select count(*) from normal] result:{}", res2.result().getResults().get(0));
+                        startFuture.complete();
+                    } else {
+                        startFuture.fail("get db connection failed.");
+                    }
+                    connection.close();
+                });
+            } else {
+                startFuture.fail("create shared client pool failed.");
+            }
+        });
     }
 
-    private void queryResultHandler(AsyncResult<ResultSet> res, Future<Void> startFuture) {
-        if (res.succeeded()) {
-            ResultSet resultSet = res.result();
-            LOG.info("DB connect success. [select count(*) from normal] result:{}", resultSet.getResults().get(0));
-            startFuture.complete();
+    private void collectData(JsonObject body) {
+        JsonArray paths = body.getJsonArray("paths");
+        String data = body.getString("body");
+        String serverIdStr = paths.getString(0);
+        int serverId = 0;
+        if (StringUtils.isNumeric(serverIdStr)) {
+            serverId = Integer.parseInt(serverIdStr);
         } else {
-            startFuture.fail("get db connection failed.");
+            LOG.error("first path not serverId:{}", serverIdStr);
+            return;
         }
+        String today = TimeUtil.getCurrentFormatDay();
+        if (!cache.containsKey(today)) {
+            cache.put(today, new HashMap<>());
+        }
+        Map<Integer, JsonObject> serverData = cache.get(today);
+        if (!serverData.containsKey(serverId)) {
+            serverData.put(serverId, new JsonObject());
+        }
+        JsonObject jsonObject = serverData.get(serverId);
+        paths.remove(0);
+        Iterator<Object> iterator = paths.iterator();
+        while (iterator.hasNext()) {
+            String name = iterator.next().toString();
+            if (!jsonObject.containsKey(name)) {
+                jsonObject.put(name, new JsonObject());
+            }
+            jsonObject = jsonObject.getJsonObject(name);
+            if (!iterator.hasNext()) {
+                jsonObject.put("data", data);
+            }
+        }
+        saveData(serverId, today, serverData.get(serverId));
     }
+
+    private void saveData(int serverId, String today, JsonObject data) {
+        sqlClient.getConnection(res -> {
+            if (res.succeeded()) {
+                SQLConnection connection = res.result();
+                connection.queryWithParams("select jsondata from normal where serverid = ? and day = ?", new JsonArray().add(serverId).add(today), res2 -> {
+                    if (res.succeeded()) {
+                        String jsonStr = res2.result().getResults().get(0).getString(0);
+
+                        if (StringUtils.isEmpty(jsonStr)) {
+                            insertData(serverId, today, data);
+                        } else {
+                            JsonObject loadData = new JsonObject(jsonStr);
+                            LOG.info("************* loadJson:{} **************", loadData);
+                            data.mergeIn(loadData, true);
+                            LOG.info("************* mergeJson:{} **************", data);
+                            updateData(serverId, today, data);
+                        }
+                    } else {
+                        LOG.error("select data error.", res2.cause());
+                    }
+                    connection.close();
+                });
+            } else {
+                LOG.error("get connection failed.", res.cause());
+            }
+        });
+    }
+
+    private void insertData(int serverId, String today, JsonObject data) {
+        sqlClient.getConnection(res -> {
+            if (res.succeeded()) {
+                SQLConnection connection = res.result();
+                connection.updateWithParams("insert into normal (serverid, jsondata, day) values (?, ?::json, ?)", new JsonArray().add(serverId).add(data.toString()).add(today), upRes -> {
+                    if (upRes.succeeded()) {
+                        LOG.debug("insert success");
+                    } else {
+                        LOG.error("data insert failed.", res.cause());
+                    }
+                });
+            } else {
+                LOG.error("get connection failed.", res.cause());
+            }
+        });
+    }
+
+    private void updateData(int serverId, String today, JsonObject data) {
+        sqlClient.getConnection(res -> {
+            if (res.succeeded()) {
+                SQLConnection connection = res.result();
+                connection.updateWithParams("update normal set jsondata = ?::json where serverid = ? and day = ?", new JsonArray().add(data.toString()).add(serverId).add(today), upRes -> {
+                    if (upRes.succeeded()) {
+                        LOG.debug("insert success");
+                    } else {
+                        LOG.error("data insert failed.", res.cause());
+                    }
+                });
+            } else {
+                LOG.error("get connection failed.", res.cause());
+            }
+        });
+    }
+
 }

@@ -1,6 +1,5 @@
 package com.jokerbee.sources;
 
-import io.vertx.config.ConfigRetriever;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 import org.slf4j.Logger;
@@ -22,7 +21,7 @@ public class AppMain {
                 logger.info("BI sources collector start OK.");
             } else {
                 logger.error("BI sources collector start error.", res.cause());
-                //vertx.close();
+                vertx.close();
             }
         });
     }
