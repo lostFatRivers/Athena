@@ -135,9 +135,7 @@ public class PostgresDBService extends AbstractVerticle {
                             insertData(serverId, today, data);
                         } else {
                             JsonObject loadData = new JsonObject(jsonStr);
-                            LOG.info("************* loadJson:{} **************", loadData);
                             data.mergeIn(loadData, true);
-                            LOG.info("************* mergeJson:{} **************", data);
                             updateData(serverId, today, data);
                         }
                     } else {
