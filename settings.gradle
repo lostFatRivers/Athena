@@ -1,0 +1,3 @@
+rootProject.name = 'Athena'
+
+include "Core", "Mars"

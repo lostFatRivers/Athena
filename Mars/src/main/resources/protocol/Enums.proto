@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option java_package = "com.jokerbee.protocol";
+option java_outer_classname = "Enums";
+
+package aft;
+
+// 消息类型id
+enum MessageType {
+    // 无
+    NONE = 0;
+
+    // 玩家进入.
+    CS_PLAYER_ENTER = 10001;
+    SC_PLAYER_ENTER = 10002;
+
+    // 玩家选择匹配.
+    CS_GAME_MATCH = 10003;
+    SC_GAME_MATCH = 10004;
+}
+

@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+option java_package = "com.jokerbee.protocol";
+option java_outer_classname = "Game";
+
+package aft;
+
+message PlayerLogin {
+    string account = 1;
+    string password = 2;
+}
+
+message PositionInfo {
+    int32 posX = 1;
+    int32 posY = 2;
+    int32 faceTo = 3;
+}
+
+message RoleSync {
+    PositionInfo pos = 1;
+}
+
+message RoleSyncResp {
+    string playerId = 1;
+    PositionInfo pos = 2;
+}

@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+option java_package = "com.jokerbee.protocol";
+option java_outer_classname = "MessageCode";
+
+// 消息code
+enum Code {
+    UN_KNOW = 0;
+
+    // 错误
+    MESSAGE_ERROR = 101;
+
+    // 账号登录
+    CS_ACCOUNT_LOGIN = 1001;
+    SC_ACCOUNT_LOGIN = 1002;
+
+    // 玩家登录
+    CS_PLAYER_LOGIN = 1003;
+    SC_PLAYER_LOGIN = 1004;
+
+    CS_GET_BASE_INFO = 1005;
+    SC_GET_BASE_INFO = 1006;
+}

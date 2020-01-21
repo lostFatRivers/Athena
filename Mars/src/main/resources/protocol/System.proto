@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+option java_package = "com.jokerbee.protocol";
+option java_outer_classname = "System";
+
+package aft;
+
+// 消息包装体, 用于Verticle之间传递.
+message ProtocolWrapper {
+    int32 code = 1;
+    bytes body = 2;
+}

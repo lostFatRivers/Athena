@@ -1,11 +1,14 @@
 # Athena
 
-使用 Vertx 工具搭建高性能应用栈, 包括 Client, Server, BI 三个部分.
+基于 Vertx 创建的分布式 Game 服务器.
 
-以前的wiki, 有时还是挺有用 https://github.com/serverBiatch/teamWiki/issues
+目标是能够搭建高可用 Game 服务器集群, 支持无缝横向扩展.
 
-zoll里的wiki, 有时也挺有用 https://github.com/lostFatRivers/zoll/issues
+#### 包含模块有:
+1. Http 模块.
+2. WebSocket 网络连接管理模块.
+3. 分布式 Player 管理中心模块.
+4. 业务处理模块
 
-GraghOfOrigin文档大爆发, 有用 https://github.com/lostFatRivers/GraghOfOrigin/tree/master/Document
-
-Crazyjohn 的wiki, 有用 https://github.com/crazyjohn/crazyjohn.github.io
+#### 存储
+目前使用了 MongoDB 作为存储, Redis 作为缓存.
