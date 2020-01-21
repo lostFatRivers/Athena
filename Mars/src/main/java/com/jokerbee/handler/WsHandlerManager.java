@@ -1,21 +1,19 @@
 package com.jokerbee.handler;
 
 import com.jokerbee.anno.MessageHandler;
-import com.jokerbee.anno.Route;
-import com.jokerbee.handler.http.GmModule;
-import com.jokerbee.handler.ws.LoginModule;
 import com.jokerbee.message.BufferTranslator;
 import com.jokerbee.player.Player;
-import com.jokerbee.protocol.System.*;
+import com.jokerbee.protocol.System.ProtocolWrapper;
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
+import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Stream;
 
 public enum WsHandlerManager {
@@ -32,11 +30,16 @@ public enum WsHandlerManager {
 
     public void init(Vertx vertx) throws Exception {
         this.vertx = vertx;
-        createHandlers();
+        scanHandlers();
     }
 
-    private void createHandlers() throws Exception {
-        newInstance(LoginModule.class);
+    private void scanHandlers() throws Exception {
+        Reflections reflections = new Reflections("com.jokerbee.handler.ws");
+        Set<Class<? extends AbstractModule>> handlerClassSet = reflections.getSubTypesOf(AbstractModule.class);
+        for (Class<? extends AbstractModule> eachClass : handlerClassSet) {
+            logger.info("new instance handler:{}", eachClass.getName());
+            newInstance(eachClass);
+        }
     }
 
     private void newInstance(Class<? extends AbstractModule> clazz) throws Exception {

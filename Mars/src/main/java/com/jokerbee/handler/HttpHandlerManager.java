@@ -1,17 +1,18 @@
 package com.jokerbee.handler;
 
 import com.jokerbee.anno.Route;
-import com.jokerbee.handler.http.GmModule;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
+import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Stream;
 
 public enum HttpHandlerManager {
@@ -28,11 +29,16 @@ public enum HttpHandlerManager {
 
     public void init(Vertx vertx) throws Exception {
         this.vertx = vertx;
-        createHandlers();
+        scanHandlers();
     }
 
-    private void createHandlers() throws Exception {
-        newInstance(GmModule.class);
+    private void scanHandlers() throws Exception {
+        Reflections reflections = new Reflections("com.jokerbee.handler.http");
+        Set<Class<? extends AbstractModule>> handlerClassSet = reflections.getSubTypesOf(AbstractModule.class);
+        for (Class<? extends AbstractModule> eachClass : handlerClassSet) {
+            logger.info("new instance handler:{}", eachClass.getName());
+            newInstance(eachClass);
+        }
     }
 
     public void registerRoute(Router router) {
