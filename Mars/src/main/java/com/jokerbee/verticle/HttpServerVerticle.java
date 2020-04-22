@@ -1,6 +1,7 @@
 package com.jokerbee.verticle;
 
 import com.jokerbee.handler.HttpHandlerManager;
+import com.jokerbee.http.handler.AESDecodeHandler;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.ext.web.Router;
@@ -13,9 +14,12 @@ import org.slf4j.LoggerFactory;
 public class HttpServerVerticle extends AbstractVerticle {
     private static Logger logger = LoggerFactory.getLogger("HTTP");
 
+    private String encryptKey;
+
     @Override
     public void start() {
         HttpServerOptions options = new HttpServerOptions();
+        encryptKey = config().getString("encryptKey");
         vertx.createHttpServer(options).requestHandler(this.accepter())
                 .listen(config().getInteger("port"));
         logger.info("Http server start, port:{}", config().getInteger("port"));
@@ -25,6 +29,7 @@ public class HttpServerVerticle extends AbstractVerticle {
         Router router = Router.router(vertx);
 
         router.route().handler(BodyHandler.create())
+                .handler(AESDecodeHandler.create(encryptKey))
                 .handler(LoggerHandler.create());
 
         // http:127.0.0.1:8008/home.jpg
