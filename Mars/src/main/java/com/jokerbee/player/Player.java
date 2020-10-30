@@ -3,6 +3,7 @@ package com.jokerbee.player;
 import com.jokerbee.consts.ClusterDataKey;
 import com.jokerbee.consts.Constants;
 import com.jokerbee.handler.WsHandlerManager;
+import io.vertx.core.Context;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
@@ -16,11 +17,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Player {
-    private static Logger logger = LoggerFactory.getLogger("Player");
+    private static final Logger logger = LoggerFactory.getLogger("Player");
 
     private Vertx vertx;
     private String playerId;
     private String socketId;
+
+    private final Context context;
 
     private MessageConsumer<JsonObject> weepConsumer;
     private MessageConsumer<Buffer> messageConsumer;
@@ -29,11 +32,8 @@ public class Player {
         this.vertx = vertx;
         this.playerId = playerId;
         this.socketId = socketId;
-        resetSocketPlayerMap(socketId).setHandler(res -> {
-            if (res.failed()) {
-                logger.error("reset socket id error.", res.cause());
-            }
-        });
+        this.context = vertx.getOrCreateContext();
+        resetSocketPlayerMap(socketId).onFailure(err -> logger.error("create player set socket id error.", err));
     }
 
     public void registerConsumers() {
@@ -48,14 +48,10 @@ public class Player {
             tMessage.reply("sweep error empty.");
             return;
         }
-        resetSocketPlayerMap(newSocketId).setHandler(res -> {
-            if (res.succeeded()) {
-                this.socketId = newSocketId;
-            } else {
-                logger.error("sweep socket id error.", res.cause());
-            }
-            tMessage.reply("sweep success.");
-        });
+        resetSocketPlayerMap(newSocketId)
+                .onSuccess(v -> this.socketId = newSocketId)
+                .onFailure(tr -> logger.error("sweep socket id error.", tr))
+                .onComplete(res -> tMessage.reply("sweep success."));
     }
 
     private Future<Void> resetSocketPlayerMap(String newSocketId) {
@@ -66,26 +62,29 @@ public class Player {
                         p.complete();
                         return;
                     }
-                    // 有老的 socket - playerId 映射, 则删除并关闭 socket;
-                    if (StringUtils.isNotEmpty(this.socketId)) {
-                        String oldSocketId = this.socketId;
-                        map.remove(oldSocketId, oid -> {
-                            if (oid.succeeded()) {
-                                vertx.eventBus().send(oldSocketId + Constants.SOCKET_CLOSE_TAIL, "close");
-                                logger.info("remove old socketId success:{}", oldSocketId);
-                            } else {
-                                logger.error("remove old socketId error:{}", oldSocketId);
-                            }
-                        });
+                    if (StringUtils.isEmpty(this.socketId)) {
+                        // 存入新的 socket - playerId 映射;
+                        map.put(newSocketId, this.playerId, p);
+                        return;
                     }
-                    // 存入新的 socket - playerId 映射;
-                    map.put(newSocketId, this.playerId, p);
+                    // 有老的 socket - playerId 映射, 则删除并关闭 socket;
+                    String oldSocketId = this.socketId;
+                    map.remove(oldSocketId, oid -> {
+                        if (oid.succeeded()) {
+                            vertx.eventBus().send(oldSocketId + Constants.SOCKET_CLOSE_TAIL, "close");
+                            logger.info("remove old socketId success:{}", oldSocketId);
+                        } else {
+                            logger.error("remove old socketId error:{}", oldSocketId, oid.cause());
+                        }
+                    });
                 }));
     }
 
     private void acceptMessage(Message<Buffer> tMessage) {
-        WsHandlerManager.getInstance().onProtocol(this, tMessage.body());
-        tMessage.reply("accepted message");
+        context.runOnContext(v -> {
+            WsHandlerManager.getInstance().onProtocol(this, tMessage.body());
+            tMessage.reply("accepted message");
+        });
     }
 
     public void destroy() {

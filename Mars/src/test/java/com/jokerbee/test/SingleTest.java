@@ -13,6 +13,7 @@ public class SingleTest {
 
     public static void main(String[] args) {
         testEncrypt();
+        getProtoBytes();
     }
 
     public static void getProtoBytes() {

@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
  * 全集群唯一, 保证玩家单点登录正常.
  */
 public class PlayerBindVerticle extends AbstractVerticle {
-    private static Logger logger = LoggerFactory.getLogger("PlayerBind");
+    private static final Logger logger = LoggerFactory.getLogger("PlayerBind");
 
     @Override
     public void start() {
@@ -47,13 +47,13 @@ public class PlayerBindVerticle extends AbstractVerticle {
             return;
         }
         String account = loginMessage.getAccount();
-        String password = loginMessage.getPassword();
+        // String password = loginMessage.getPassword();
 
         // 查找 playerId; 绑定并发送登录消息;
         searchPlayerId(account)
                 .compose(pId -> sweepPlayerSocketId(socketId, account, pId))
                 .compose(pId -> sendLoginMessage(pId, buffer))
-                .setHandler(res -> {
+                .onComplete(res -> {
                     if (res.succeeded()) {
                         msg.reply("bind success");
                     } else {
@@ -96,7 +96,7 @@ public class PlayerBindVerticle extends AbstractVerticle {
                 p.complete(truePlayerId);
             } else {
                 logger.info("no such player handler:{}", res.cause().getMessage());
-                createPlayer(truePlayerId, socketId).setHandler(p);
+                createPlayer(truePlayerId, socketId).onComplete(p);
             }
         }));
     }
@@ -121,7 +121,7 @@ public class PlayerBindVerticle extends AbstractVerticle {
     }
 
     @Override
-    public void stop() throws Exception {
-
+    public void stop() {
+        logger.info("***************** PLAYER BIND SERVICE CLOSED !!!! *****************");
     }
 }

@@ -16,9 +16,9 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class PlayerVerticle extends AbstractVerticle {
-    private static Logger logger = LoggerFactory.getLogger("Player");
-    private static long counter = 0;
-    private static AtomicInteger aCounter = new AtomicInteger(0);
+    private static final Logger logger = LoggerFactory.getLogger("Player");
+    private long counter = 0;
+    private static final AtomicInteger aCounter = new AtomicInteger(0);
 
     private MongoClient mongo;
 
@@ -26,7 +26,8 @@ public class PlayerVerticle extends AbstractVerticle {
     public void start() {
         vertx.eventBus().consumer(Constants.PLAYER_CREATE_KEY, this::createPlayer);
         vertx.eventBus().consumer(Constants.PLAYER_DESTROY_KEY, this::destroyPlayer);
-        mongo = MongoClient.createNonShared(vertx, config());
+        mongo = MongoClient.create(vertx, config());
+        counter = aCounter.getAndIncrement();
         logger.info("Player handler start success.");
     }
 

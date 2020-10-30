@@ -1,18 +1,13 @@
 package com.jokerbee.verticle;
 
-import com.jokerbee.cache.CacheManager;
 import com.jokerbee.consts.ClusterDataKey;
 import com.jokerbee.consts.Constants;
-import com.jokerbee.consts.RedisKey;
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.MessageConsumer;
-import io.vertx.core.http.HttpServer;
-import io.vertx.core.http.HttpServerOptions;
-import io.vertx.core.http.HttpServerRequest;
-import io.vertx.core.http.ServerWebSocket;
+import io.vertx.core.http.*;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.net.JksOptions;
 import io.vertx.core.shareddata.AsyncMap;
@@ -20,28 +15,37 @@ import io.vertx.core.shareddata.SharedData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class WsServerVerticle extends AbstractVerticle {
-    private static Logger logger = LoggerFactory.getLogger("WsServer");
-    private Map<String, MessageConsumer<?>> closeConsumers = new HashMap<>();
+    private static final Logger logger = LoggerFactory.getLogger("WsServer");
+
+    private final AtomicInteger connectCounter = new AtomicInteger(0);
+
+    private HttpServer httpServer;
 
     @Override
-    public void start() throws Exception {
-        createWebSocketService();
+    public void start(Promise<Void> promise) {
+        try {
+            createWebSocketService();
+            addShutdownHook();
+            promise.complete();
+        } catch (Exception e) {
+            promise.fail(e);
+        }
     }
 
-    private void createWebSocketService() throws Exception {
+    private void createWebSocketService() {
         HttpServerOptions options = new HttpServerOptions();
         if (config().getBoolean("SSL")) {
             options.setUseAlpn(true)
                 .setSsl(true)
                 .setKeyStoreOptions(new JksOptions().setPath(config().getString("cerPath")).setPassword(config().getString("cerPassword")));
         }
-        HttpServer httpServer = vertx.createHttpServer(options);
+        httpServer = vertx.createHttpServer(options);
         httpServer.requestHandler(this::httpRequestHandler)
-                .websocketHandler(this::websocketHandler)
+                .webSocketHandler(this::websocketHandler)
+                .connectionHandler(this::httpConnection)
                 .listen(config().getInteger("port"));
 
         logger.info("WsServerVerticle start, port:{}", config().getInteger("port"));
@@ -58,18 +62,16 @@ public class WsServerVerticle extends AbstractVerticle {
             return;
         }
         String binaryId = webSocket.binaryHandlerID();
-        logger.info("websocket connect open: {}", binaryId);
+        logger.info("websocket connect open: {}, connectCount:{}", binaryId, connectCounter.incrementAndGet());
 
         webSocket.write(new JsonObject().put("test1", "clustered").toBuffer());
         // 注册关闭回调
         MessageConsumer<Object> consumer = vertx.eventBus().consumer(binaryId + Constants.SOCKET_CLOSE_TAIL, msg -> closeSocket(webSocket));
-        closeConsumers.put(binaryId, consumer);
 
         webSocket.handler(buffer -> messageHandler(binaryId, buffer));
         webSocket.closeHandler(v -> {
             consumer.unregister();
-            closeConsumers.remove(binaryId);
-            logger.info("websocket closed binary id:{}, closeConsumersSize:{}", binaryId, closeConsumers.size());
+            logger.info("websocket closed binary id:{}, connectCount:{}", binaryId, connectCounter.decrementAndGet());
         });
         webSocket.exceptionHandler(e -> logger.error("websocket cache exception, binary id:{}", binaryId, e));
     }
@@ -90,20 +92,17 @@ public class WsServerVerticle extends AbstractVerticle {
 
         Future.<AsyncMap<String, String>>future(p -> sharedData.getClusterWideMap(ClusterDataKey.SOCKET_ID_PLAYER, p))
                 .compose(map -> Future.<String>future(p -> map.get(socketBinaryHandlerId, p)))
-                .setHandler(res -> {
-                    String playerId = null;
-                    if (res.succeeded()) {
-                        playerId = res.result();
-                    }
-                    // 是否找到绑定的playerId
-                    if (playerId == null) {
-                        tellToInitPlayer(socketBinaryHandlerId, buffer);
-                    } else {
-                        dispatchMessageToPlayer(playerId, buffer);
-                    }
-                });
+                .onSuccess(playerId -> dispatchMessageToPlayer(playerId, buffer))
+                .onFailure(tr -> tellToInitPlayer(socketBinaryHandlerId, buffer));
     }
 
+    private void httpConnection(HttpConnection connection) {
+        logger.info("get http connection: {}", connection.remoteAddress());
+    }
+
+    /**
+     * 通知玩家创建;
+     */
     private void tellToInitPlayer(String socketBinaryHandlerId, Buffer buffer) {
         JsonObject msg = new JsonObject().put("socketId", socketBinaryHandlerId)
                 .put("buffer", buffer.getBytes());
@@ -118,6 +117,9 @@ public class WsServerVerticle extends AbstractVerticle {
         });
     }
 
+    /**
+     * 派送消息给玩家;
+     */
     private void dispatchMessageToPlayer(String playerId, Buffer buffer) {
         vertx.eventBus().request(playerId + Constants.PLAYER_MESSAGE_HANDLER_TAIL, buffer, res -> {
             if (res.succeeded()) {
@@ -128,4 +130,10 @@ public class WsServerVerticle extends AbstractVerticle {
         });
     }
 
+    private void addShutdownHook() {
+        context.addCloseHook(h -> {
+            httpServer.close(h);
+            logger.info("close websocket service");
+        });
+    }
 }

@@ -20,20 +20,24 @@ public final class Game {
 
     /**
      * <code>string account = 1;</code>
+     * @return The account.
      */
     java.lang.String getAccount();
     /**
      * <code>string account = 1;</code>
+     * @return The bytes for account.
      */
     com.google.protobuf.ByteString
         getAccountBytes();
 
     /**
      * <code>string password = 2;</code>
+     * @return The password.
      */
     java.lang.String getPassword();
     /**
      * <code>string password = 2;</code>
+     * @return The bytes for password.
      */
     com.google.protobuf.ByteString
         getPasswordBytes();
@@ -41,7 +45,7 @@ public final class Game {
   /**
    * Protobuf type {@code aft.PlayerLogin}
    */
-  public  static final class PlayerLogin extends
+  public static final class PlayerLogin extends
       com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:aft.PlayerLogin)
       PlayerLoginOrBuilder {
@@ -53,6 +57,13 @@ public final class Game {
     private PlayerLogin() {
       account_ = "";
       password_ = "";
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new PlayerLogin();
     }
 
     @java.lang.Override
@@ -68,7 +79,6 @@ public final class Game {
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
-      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -79,13 +89,6 @@ public final class Game {
             case 0:
               done = true;
               break;
-            default: {
-              if (!parseUnknownFieldProto3(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
             case 10: {
               java.lang.String s = input.readStringRequireUtf8();
 
@@ -96,6 +99,13 @@ public final class Game {
               java.lang.String s = input.readStringRequireUtf8();
 
               password_ = s;
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
               break;
             }
           }
@@ -115,6 +125,7 @@ public final class Game {
       return com.jokerbee.protocol.Game.internal_static_aft_PlayerLogin_descriptor;
     }
 
+    @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return com.jokerbee.protocol.Game.internal_static_aft_PlayerLogin_fieldAccessorTable
@@ -126,7 +137,9 @@ public final class Game {
     private volatile java.lang.Object account_;
     /**
      * <code>string account = 1;</code>
+     * @return The account.
      */
+    @java.lang.Override
     public java.lang.String getAccount() {
       java.lang.Object ref = account_;
       if (ref instanceof java.lang.String) {
@@ -141,7 +154,9 @@ public final class Game {
     }
     /**
      * <code>string account = 1;</code>
+     * @return The bytes for account.
      */
+    @java.lang.Override
     public com.google.protobuf.ByteString
         getAccountBytes() {
       java.lang.Object ref = account_;
@@ -160,7 +175,9 @@ public final class Game {
     private volatile java.lang.Object password_;
     /**
      * <code>string password = 2;</code>
+     * @return The password.
      */
+    @java.lang.Override
     public java.lang.String getPassword() {
       java.lang.Object ref = password_;
       if (ref instanceof java.lang.String) {
@@ -175,7 +192,9 @@ public final class Game {
     }
     /**
      * <code>string password = 2;</code>
+     * @return The bytes for password.
      */
+    @java.lang.Override
     public com.google.protobuf.ByteString
         getPasswordBytes() {
       java.lang.Object ref = password_;
@@ -191,6 +210,7 @@ public final class Game {
     }
 
     private byte memoizedIsInitialized = -1;
+    @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized == 1) return true;
@@ -200,6 +220,7 @@ public final class Game {
       return true;
     }
 
+    @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (!getAccountBytes().isEmpty()) {
@@ -211,6 +232,7 @@ public final class Game {
       unknownFields.writeTo(output);
     }
 
+    @java.lang.Override
     public int getSerializedSize() {
       int size = memoizedSize;
       if (size != -1) return size;
@@ -237,13 +259,12 @@ public final class Game {
       }
       com.jokerbee.protocol.Game.PlayerLogin other = (com.jokerbee.protocol.Game.PlayerLogin) obj;
 
-      boolean result = true;
-      result = result && getAccount()
-          .equals(other.getAccount());
-      result = result && getPassword()
-          .equals(other.getPassword());
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
+      if (!getAccount()
+          .equals(other.getAccount())) return false;
+      if (!getPassword()
+          .equals(other.getPassword())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
     }
 
     @java.lang.Override
@@ -332,6 +353,7 @@ public final class Game {
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
+    @java.lang.Override
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
@@ -339,6 +361,7 @@ public final class Game {
     public static Builder newBuilder(com.jokerbee.protocol.Game.PlayerLogin prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+    @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
           ? new Builder() : new Builder().mergeFrom(this);
@@ -362,6 +385,7 @@ public final class Game {
         return com.jokerbee.protocol.Game.internal_static_aft_PlayerLogin_descriptor;
       }
 
+      @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return com.jokerbee.protocol.Game.internal_static_aft_PlayerLogin_fieldAccessorTable
@@ -384,6 +408,7 @@ public final class Game {
                 .alwaysUseFieldBuilders) {
         }
       }
+      @java.lang.Override
       public Builder clear() {
         super.clear();
         account_ = "";
@@ -393,15 +418,18 @@ public final class Game {
         return this;
       }
 
+      @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return com.jokerbee.protocol.Game.internal_static_aft_PlayerLogin_descriptor;
       }
 
+      @java.lang.Override
       public com.jokerbee.protocol.Game.PlayerLogin getDefaultInstanceForType() {
         return com.jokerbee.protocol.Game.PlayerLogin.getDefaultInstance();
       }
 
+      @java.lang.Override
       public com.jokerbee.protocol.Game.PlayerLogin build() {
         com.jokerbee.protocol.Game.PlayerLogin result = buildPartial();
         if (!result.isInitialized()) {
@@ -410,6 +438,7 @@ public final class Game {
         return result;
       }
 
+      @java.lang.Override
       public com.jokerbee.protocol.Game.PlayerLogin buildPartial() {
         com.jokerbee.protocol.Game.PlayerLogin result = new com.jokerbee.protocol.Game.PlayerLogin(this);
         result.account_ = account_;
@@ -418,32 +447,39 @@ public final class Game {
         return result;
       }
 
+      @java.lang.Override
       public Builder clone() {
-        return (Builder) super.clone();
+        return super.clone();
       }
+      @java.lang.Override
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return (Builder) super.setField(field, value);
+        return super.setField(field, value);
       }
+      @java.lang.Override
       public Builder clearField(
           com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
+        return super.clearField(field);
       }
+      @java.lang.Override
       public Builder clearOneof(
           com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
+        return super.clearOneof(oneof);
       }
+      @java.lang.Override
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
+        return super.setRepeatedField(field, index, value);
       }
+      @java.lang.Override
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return (Builder) super.addRepeatedField(field, value);
+        return super.addRepeatedField(field, value);
       }
+      @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.jokerbee.protocol.Game.PlayerLogin) {
           return mergeFrom((com.jokerbee.protocol.Game.PlayerLogin)other);
@@ -468,10 +504,12 @@ public final class Game {
         return this;
       }
 
+      @java.lang.Override
       public final boolean isInitialized() {
         return true;
       }
 
+      @java.lang.Override
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -493,6 +531,7 @@ public final class Game {
       private java.lang.Object account_ = "";
       /**
        * <code>string account = 1;</code>
+       * @return The account.
        */
       public java.lang.String getAccount() {
         java.lang.Object ref = account_;
@@ -508,6 +547,7 @@ public final class Game {
       }
       /**
        * <code>string account = 1;</code>
+       * @return The bytes for account.
        */
       public com.google.protobuf.ByteString
           getAccountBytes() {
@@ -524,6 +564,8 @@ public final class Game {
       }
       /**
        * <code>string account = 1;</code>
+       * @param value The account to set.
+       * @return This builder for chaining.
        */
       public Builder setAccount(
           java.lang.String value) {
@@ -537,6 +579,7 @@ public final class Game {
       }
       /**
        * <code>string account = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearAccount() {
         
@@ -546,6 +589,8 @@ public final class Game {
       }
       /**
        * <code>string account = 1;</code>
+       * @param value The bytes for account to set.
+       * @return This builder for chaining.
        */
       public Builder setAccountBytes(
           com.google.protobuf.ByteString value) {
@@ -562,6 +607,7 @@ public final class Game {
       private java.lang.Object password_ = "";
       /**
        * <code>string password = 2;</code>
+       * @return The password.
        */
       public java.lang.String getPassword() {
         java.lang.Object ref = password_;
@@ -577,6 +623,7 @@ public final class Game {
       }
       /**
        * <code>string password = 2;</code>
+       * @return The bytes for password.
        */
       public com.google.protobuf.ByteString
           getPasswordBytes() {
@@ -593,6 +640,8 @@ public final class Game {
       }
       /**
        * <code>string password = 2;</code>
+       * @param value The password to set.
+       * @return This builder for chaining.
        */
       public Builder setPassword(
           java.lang.String value) {
@@ -606,6 +655,7 @@ public final class Game {
       }
       /**
        * <code>string password = 2;</code>
+       * @return This builder for chaining.
        */
       public Builder clearPassword() {
         
@@ -615,6 +665,8 @@ public final class Game {
       }
       /**
        * <code>string password = 2;</code>
+       * @param value The bytes for password to set.
+       * @return This builder for chaining.
        */
       public Builder setPasswordBytes(
           com.google.protobuf.ByteString value) {
@@ -627,11 +679,13 @@ public final class Game {
         onChanged();
         return this;
       }
+      @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFieldsProto3(unknownFields);
+        return super.setUnknownFields(unknownFields);
       }
 
+      @java.lang.Override
       public final Builder mergeUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
@@ -653,6 +707,7 @@ public final class Game {
 
     private static final com.google.protobuf.Parser<PlayerLogin>
         PARSER = new com.google.protobuf.AbstractParser<PlayerLogin>() {
+      @java.lang.Override
       public PlayerLogin parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -670,6 +725,7 @@ public final class Game {
       return PARSER;
     }
 
+    @java.lang.Override
     public com.jokerbee.protocol.Game.PlayerLogin getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
@@ -682,23 +738,26 @@ public final class Game {
 
     /**
      * <code>int32 posX = 1;</code>
+     * @return The posX.
      */
     int getPosX();
 
     /**
      * <code>int32 posY = 2;</code>
+     * @return The posY.
      */
     int getPosY();
 
     /**
      * <code>int32 faceTo = 3;</code>
+     * @return The faceTo.
      */
     int getFaceTo();
   }
   /**
    * Protobuf type {@code aft.PositionInfo}
    */
-  public  static final class PositionInfo extends
+  public static final class PositionInfo extends
       com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:aft.PositionInfo)
       PositionInfoOrBuilder {
@@ -708,9 +767,13 @@ public final class Game {
       super(builder);
     }
     private PositionInfo() {
-      posX_ = 0;
-      posY_ = 0;
-      faceTo_ = 0;
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new PositionInfo();
     }
 
     @java.lang.Override
@@ -726,7 +789,6 @@ public final class Game {
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
-      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -737,13 +799,6 @@ public final class Game {
             case 0:
               done = true;
               break;
-            default: {
-              if (!parseUnknownFieldProto3(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
             case 8: {
 
               posX_ = input.readInt32();
@@ -757,6 +812,13 @@ public final class Game {
             case 24: {
 
               faceTo_ = input.readInt32();
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
               break;
             }
           }
@@ -776,6 +838,7 @@ public final class Game {
       return com.jokerbee.protocol.Game.internal_static_aft_PositionInfo_descriptor;
     }
 
+    @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return com.jokerbee.protocol.Game.internal_static_aft_PositionInfo_fieldAccessorTable
@@ -787,7 +850,9 @@ public final class Game {
     private int posX_;
     /**
      * <code>int32 posX = 1;</code>
+     * @return The posX.
      */
+    @java.lang.Override
     public int getPosX() {
       return posX_;
     }
@@ -796,7 +861,9 @@ public final class Game {
     private int posY_;
     /**
      * <code>int32 posY = 2;</code>
+     * @return The posY.
      */
+    @java.lang.Override
     public int getPosY() {
       return posY_;
     }
@@ -805,12 +872,15 @@ public final class Game {
     private int faceTo_;
     /**
      * <code>int32 faceTo = 3;</code>
+     * @return The faceTo.
      */
+    @java.lang.Override
     public int getFaceTo() {
       return faceTo_;
     }
 
     private byte memoizedIsInitialized = -1;
+    @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized == 1) return true;
@@ -820,6 +890,7 @@ public final class Game {
       return true;
     }
 
+    @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (posX_ != 0) {
@@ -834,6 +905,7 @@ public final class Game {
       unknownFields.writeTo(output);
     }
 
+    @java.lang.Override
     public int getSerializedSize() {
       int size = memoizedSize;
       if (size != -1) return size;
@@ -866,15 +938,14 @@ public final class Game {
       }
       com.jokerbee.protocol.Game.PositionInfo other = (com.jokerbee.protocol.Game.PositionInfo) obj;
 
-      boolean result = true;
-      result = result && (getPosX()
-          == other.getPosX());
-      result = result && (getPosY()
-          == other.getPosY());
-      result = result && (getFaceTo()
-          == other.getFaceTo());
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
+      if (getPosX()
+          != other.getPosX()) return false;
+      if (getPosY()
+          != other.getPosY()) return false;
+      if (getFaceTo()
+          != other.getFaceTo()) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
     }
 
     @java.lang.Override
@@ -965,6 +1036,7 @@ public final class Game {
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
+    @java.lang.Override
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
@@ -972,6 +1044,7 @@ public final class Game {
     public static Builder newBuilder(com.jokerbee.protocol.Game.PositionInfo prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+    @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
           ? new Builder() : new Builder().mergeFrom(this);
@@ -995,6 +1068,7 @@ public final class Game {
         return com.jokerbee.protocol.Game.internal_static_aft_PositionInfo_descriptor;
       }
 
+      @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return com.jokerbee.protocol.Game.internal_static_aft_PositionInfo_fieldAccessorTable
@@ -1017,6 +1091,7 @@ public final class Game {
                 .alwaysUseFieldBuilders) {
         }
       }
+      @java.lang.Override
       public Builder clear() {
         super.clear();
         posX_ = 0;
@@ -1028,15 +1103,18 @@ public final class Game {
         return this;
       }
 
+      @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return com.jokerbee.protocol.Game.internal_static_aft_PositionInfo_descriptor;
       }
 
+      @java.lang.Override
       public com.jokerbee.protocol.Game.PositionInfo getDefaultInstanceForType() {
         return com.jokerbee.protocol.Game.PositionInfo.getDefaultInstance();
       }
 
+      @java.lang.Override
       public com.jokerbee.protocol.Game.PositionInfo build() {
         com.jokerbee.protocol.Game.PositionInfo result = buildPartial();
         if (!result.isInitialized()) {
@@ -1045,6 +1123,7 @@ public final class Game {
         return result;
       }
 
+      @java.lang.Override
       public com.jokerbee.protocol.Game.PositionInfo buildPartial() {
         com.jokerbee.protocol.Game.PositionInfo result = new com.jokerbee.protocol.Game.PositionInfo(this);
         result.posX_ = posX_;
@@ -1054,32 +1133,39 @@ public final class Game {
         return result;
       }
 
+      @java.lang.Override
       public Builder clone() {
-        return (Builder) super.clone();
+        return super.clone();
       }
+      @java.lang.Override
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return (Builder) super.setField(field, value);
+        return super.setField(field, value);
       }
+      @java.lang.Override
       public Builder clearField(
           com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
+        return super.clearField(field);
       }
+      @java.lang.Override
       public Builder clearOneof(
           com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
+        return super.clearOneof(oneof);
       }
+      @java.lang.Override
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
+        return super.setRepeatedField(field, index, value);
       }
+      @java.lang.Override
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return (Builder) super.addRepeatedField(field, value);
+        return super.addRepeatedField(field, value);
       }
+      @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.jokerbee.protocol.Game.PositionInfo) {
           return mergeFrom((com.jokerbee.protocol.Game.PositionInfo)other);
@@ -1105,10 +1191,12 @@ public final class Game {
         return this;
       }
 
+      @java.lang.Override
       public final boolean isInitialized() {
         return true;
       }
 
+      @java.lang.Override
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -1130,12 +1218,16 @@ public final class Game {
       private int posX_ ;
       /**
        * <code>int32 posX = 1;</code>
+       * @return The posX.
        */
+      @java.lang.Override
       public int getPosX() {
         return posX_;
       }
       /**
        * <code>int32 posX = 1;</code>
+       * @param value The posX to set.
+       * @return This builder for chaining.
        */
       public Builder setPosX(int value) {
         
@@ -1145,6 +1237,7 @@ public final class Game {
       }
       /**
        * <code>int32 posX = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearPosX() {
         
@@ -1156,12 +1249,16 @@ public final class Game {
       private int posY_ ;
       /**
        * <code>int32 posY = 2;</code>
+       * @return The posY.
        */
+      @java.lang.Override
       public int getPosY() {
         return posY_;
       }
       /**
        * <code>int32 posY = 2;</code>
+       * @param value The posY to set.
+       * @return This builder for chaining.
        */
       public Builder setPosY(int value) {
         
@@ -1171,6 +1268,7 @@ public final class Game {
       }
       /**
        * <code>int32 posY = 2;</code>
+       * @return This builder for chaining.
        */
       public Builder clearPosY() {
         
@@ -1182,12 +1280,16 @@ public final class Game {
       private int faceTo_ ;
       /**
        * <code>int32 faceTo = 3;</code>
+       * @return The faceTo.
        */
+      @java.lang.Override
       public int getFaceTo() {
         return faceTo_;
       }
       /**
        * <code>int32 faceTo = 3;</code>
+       * @param value The faceTo to set.
+       * @return This builder for chaining.
        */
       public Builder setFaceTo(int value) {
         
@@ -1197,6 +1299,7 @@ public final class Game {
       }
       /**
        * <code>int32 faceTo = 3;</code>
+       * @return This builder for chaining.
        */
       public Builder clearFaceTo() {
         
@@ -1204,11 +1307,13 @@ public final class Game {
         onChanged();
         return this;
       }
+      @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFieldsProto3(unknownFields);
+        return super.setUnknownFields(unknownFields);
       }
 
+      @java.lang.Override
       public final Builder mergeUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
@@ -1230,6 +1335,7 @@ public final class Game {
 
     private static final com.google.protobuf.Parser<PositionInfo>
         PARSER = new com.google.protobuf.AbstractParser<PositionInfo>() {
+      @java.lang.Override
       public PositionInfo parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -1247,6 +1353,7 @@ public final class Game {
       return PARSER;
     }
 
+    @java.lang.Override
     public com.jokerbee.protocol.Game.PositionInfo getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
@@ -1259,10 +1366,12 @@ public final class Game {
 
     /**
      * <code>.aft.PositionInfo pos = 1;</code>
+     * @return Whether the pos field is set.
      */
     boolean hasPos();
     /**
      * <code>.aft.PositionInfo pos = 1;</code>
+     * @return The pos.
      */
     com.jokerbee.protocol.Game.PositionInfo getPos();
     /**
@@ -1273,7 +1382,7 @@ public final class Game {
   /**
    * Protobuf type {@code aft.RoleSync}
    */
-  public  static final class RoleSync extends
+  public static final class RoleSync extends
       com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:aft.RoleSync)
       RoleSyncOrBuilder {
@@ -1283,6 +1392,13 @@ public final class Game {
       super(builder);
     }
     private RoleSync() {
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new RoleSync();
     }
 
     @java.lang.Override
@@ -1298,7 +1414,6 @@ public final class Game {
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
-      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -1309,13 +1424,6 @@ public final class Game {
             case 0:
               done = true;
               break;
-            default: {
-              if (!parseUnknownFieldProto3(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
             case 10: {
               com.jokerbee.protocol.Game.PositionInfo.Builder subBuilder = null;
               if (pos_ != null) {
@@ -1327,6 +1435,13 @@ public final class Game {
                 pos_ = subBuilder.buildPartial();
               }
 
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
               break;
             }
           }
@@ -1346,6 +1461,7 @@ public final class Game {
       return com.jokerbee.protocol.Game.internal_static_aft_RoleSync_descriptor;
     }
 
+    @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return com.jokerbee.protocol.Game.internal_static_aft_RoleSync_fieldAccessorTable
@@ -1357,24 +1473,30 @@ public final class Game {
     private com.jokerbee.protocol.Game.PositionInfo pos_;
     /**
      * <code>.aft.PositionInfo pos = 1;</code>
+     * @return Whether the pos field is set.
      */
+    @java.lang.Override
     public boolean hasPos() {
       return pos_ != null;
     }
     /**
      * <code>.aft.PositionInfo pos = 1;</code>
+     * @return The pos.
      */
+    @java.lang.Override
     public com.jokerbee.protocol.Game.PositionInfo getPos() {
       return pos_ == null ? com.jokerbee.protocol.Game.PositionInfo.getDefaultInstance() : pos_;
     }
     /**
      * <code>.aft.PositionInfo pos = 1;</code>
      */
+    @java.lang.Override
     public com.jokerbee.protocol.Game.PositionInfoOrBuilder getPosOrBuilder() {
       return getPos();
     }
 
     private byte memoizedIsInitialized = -1;
+    @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized == 1) return true;
@@ -1384,6 +1506,7 @@ public final class Game {
       return true;
     }
 
+    @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (pos_ != null) {
@@ -1392,6 +1515,7 @@ public final class Game {
       unknownFields.writeTo(output);
     }
 
+    @java.lang.Override
     public int getSerializedSize() {
       int size = memoizedSize;
       if (size != -1) return size;
@@ -1416,14 +1540,13 @@ public final class Game {
       }
       com.jokerbee.protocol.Game.RoleSync other = (com.jokerbee.protocol.Game.RoleSync) obj;
 
-      boolean result = true;
-      result = result && (hasPos() == other.hasPos());
+      if (hasPos() != other.hasPos()) return false;
       if (hasPos()) {
-        result = result && getPos()
-            .equals(other.getPos());
+        if (!getPos()
+            .equals(other.getPos())) return false;
       }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
     }
 
     @java.lang.Override
@@ -1512,6 +1635,7 @@ public final class Game {
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
+    @java.lang.Override
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
@@ -1519,6 +1643,7 @@ public final class Game {
     public static Builder newBuilder(com.jokerbee.protocol.Game.RoleSync prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+    @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
           ? new Builder() : new Builder().mergeFrom(this);
@@ -1542,6 +1667,7 @@ public final class Game {
         return com.jokerbee.protocol.Game.internal_static_aft_RoleSync_descriptor;
       }
 
+      @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return com.jokerbee.protocol.Game.internal_static_aft_RoleSync_fieldAccessorTable
@@ -1564,6 +1690,7 @@ public final class Game {
                 .alwaysUseFieldBuilders) {
         }
       }
+      @java.lang.Override
       public Builder clear() {
         super.clear();
         if (posBuilder_ == null) {
@@ -1575,15 +1702,18 @@ public final class Game {
         return this;
       }
 
+      @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return com.jokerbee.protocol.Game.internal_static_aft_RoleSync_descriptor;
       }
 
+      @java.lang.Override
       public com.jokerbee.protocol.Game.RoleSync getDefaultInstanceForType() {
         return com.jokerbee.protocol.Game.RoleSync.getDefaultInstance();
       }
 
+      @java.lang.Override
       public com.jokerbee.protocol.Game.RoleSync build() {
         com.jokerbee.protocol.Game.RoleSync result = buildPartial();
         if (!result.isInitialized()) {
@@ -1592,6 +1722,7 @@ public final class Game {
         return result;
       }
 
+      @java.lang.Override
       public com.jokerbee.protocol.Game.RoleSync buildPartial() {
         com.jokerbee.protocol.Game.RoleSync result = new com.jokerbee.protocol.Game.RoleSync(this);
         if (posBuilder_ == null) {
@@ -1603,32 +1734,39 @@ public final class Game {
         return result;
       }
 
+      @java.lang.Override
       public Builder clone() {
-        return (Builder) super.clone();
+        return super.clone();
       }
+      @java.lang.Override
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return (Builder) super.setField(field, value);
+        return super.setField(field, value);
       }
+      @java.lang.Override
       public Builder clearField(
           com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
+        return super.clearField(field);
       }
+      @java.lang.Override
       public Builder clearOneof(
           com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
+        return super.clearOneof(oneof);
       }
+      @java.lang.Override
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
+        return super.setRepeatedField(field, index, value);
       }
+      @java.lang.Override
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return (Builder) super.addRepeatedField(field, value);
+        return super.addRepeatedField(field, value);
       }
+      @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.jokerbee.protocol.Game.RoleSync) {
           return mergeFrom((com.jokerbee.protocol.Game.RoleSync)other);
@@ -1648,10 +1786,12 @@ public final class Game {
         return this;
       }
 
+      @java.lang.Override
       public final boolean isInitialized() {
         return true;
       }
 
+      @java.lang.Override
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -1670,17 +1810,19 @@ public final class Game {
         return this;
       }
 
-      private com.jokerbee.protocol.Game.PositionInfo pos_ = null;
+      private com.jokerbee.protocol.Game.PositionInfo pos_;
       private com.google.protobuf.SingleFieldBuilderV3<
           com.jokerbee.protocol.Game.PositionInfo, com.jokerbee.protocol.Game.PositionInfo.Builder, com.jokerbee.protocol.Game.PositionInfoOrBuilder> posBuilder_;
       /**
        * <code>.aft.PositionInfo pos = 1;</code>
+       * @return Whether the pos field is set.
        */
       public boolean hasPos() {
         return posBuilder_ != null || pos_ != null;
       }
       /**
        * <code>.aft.PositionInfo pos = 1;</code>
+       * @return The pos.
        */
       public com.jokerbee.protocol.Game.PositionInfo getPos() {
         if (posBuilder_ == null) {
@@ -1786,11 +1928,13 @@ public final class Game {
         }
         return posBuilder_;
       }
+      @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFieldsProto3(unknownFields);
+        return super.setUnknownFields(unknownFields);
       }
 
+      @java.lang.Override
       public final Builder mergeUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
@@ -1812,6 +1956,7 @@ public final class Game {
 
     private static final com.google.protobuf.Parser<RoleSync>
         PARSER = new com.google.protobuf.AbstractParser<RoleSync>() {
+      @java.lang.Override
       public RoleSync parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -1829,6 +1974,7 @@ public final class Game {
       return PARSER;
     }
 
+    @java.lang.Override
     public com.jokerbee.protocol.Game.RoleSync getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
@@ -1841,20 +1987,24 @@ public final class Game {
 
     /**
      * <code>string playerId = 1;</code>
+     * @return The playerId.
      */
     java.lang.String getPlayerId();
     /**
      * <code>string playerId = 1;</code>
+     * @return The bytes for playerId.
      */
     com.google.protobuf.ByteString
         getPlayerIdBytes();
 
     /**
      * <code>.aft.PositionInfo pos = 2;</code>
+     * @return Whether the pos field is set.
      */
     boolean hasPos();
     /**
      * <code>.aft.PositionInfo pos = 2;</code>
+     * @return The pos.
      */
     com.jokerbee.protocol.Game.PositionInfo getPos();
     /**
@@ -1865,7 +2015,7 @@ public final class Game {
   /**
    * Protobuf type {@code aft.RoleSyncResp}
    */
-  public  static final class RoleSyncResp extends
+  public static final class RoleSyncResp extends
       com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:aft.RoleSyncResp)
       RoleSyncRespOrBuilder {
@@ -1876,6 +2026,13 @@ public final class Game {
     }
     private RoleSyncResp() {
       playerId_ = "";
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new RoleSyncResp();
     }
 
     @java.lang.Override
@@ -1891,7 +2048,6 @@ public final class Game {
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
-      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -1902,13 +2058,6 @@ public final class Game {
             case 0:
               done = true;
               break;
-            default: {
-              if (!parseUnknownFieldProto3(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
             case 10: {
               java.lang.String s = input.readStringRequireUtf8();
 
@@ -1928,6 +2077,13 @@ public final class Game {
 
               break;
             }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -1945,6 +2101,7 @@ public final class Game {
       return com.jokerbee.protocol.Game.internal_static_aft_RoleSyncResp_descriptor;
     }
 
+    @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return com.jokerbee.protocol.Game.internal_static_aft_RoleSyncResp_fieldAccessorTable
@@ -1956,7 +2113,9 @@ public final class Game {
     private volatile java.lang.Object playerId_;
     /**
      * <code>string playerId = 1;</code>
+     * @return The playerId.
      */
+    @java.lang.Override
     public java.lang.String getPlayerId() {
       java.lang.Object ref = playerId_;
       if (ref instanceof java.lang.String) {
@@ -1971,7 +2130,9 @@ public final class Game {
     }
     /**
      * <code>string playerId = 1;</code>
+     * @return The bytes for playerId.
      */
+    @java.lang.Override
     public com.google.protobuf.ByteString
         getPlayerIdBytes() {
       java.lang.Object ref = playerId_;
@@ -1990,24 +2151,30 @@ public final class Game {
     private com.jokerbee.protocol.Game.PositionInfo pos_;
     /**
      * <code>.aft.PositionInfo pos = 2;</code>
+     * @return Whether the pos field is set.
      */
+    @java.lang.Override
     public boolean hasPos() {
       return pos_ != null;
     }
     /**
      * <code>.aft.PositionInfo pos = 2;</code>
+     * @return The pos.
      */
+    @java.lang.Override
     public com.jokerbee.protocol.Game.PositionInfo getPos() {
       return pos_ == null ? com.jokerbee.protocol.Game.PositionInfo.getDefaultInstance() : pos_;
     }
     /**
      * <code>.aft.PositionInfo pos = 2;</code>
      */
+    @java.lang.Override
     public com.jokerbee.protocol.Game.PositionInfoOrBuilder getPosOrBuilder() {
       return getPos();
     }
 
     private byte memoizedIsInitialized = -1;
+    @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized == 1) return true;
@@ -2017,6 +2184,7 @@ public final class Game {
       return true;
     }
 
+    @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (!getPlayerIdBytes().isEmpty()) {
@@ -2028,6 +2196,7 @@ public final class Game {
       unknownFields.writeTo(output);
     }
 
+    @java.lang.Override
     public int getSerializedSize() {
       int size = memoizedSize;
       if (size != -1) return size;
@@ -2055,16 +2224,15 @@ public final class Game {
       }
       com.jokerbee.protocol.Game.RoleSyncResp other = (com.jokerbee.protocol.Game.RoleSyncResp) obj;
 
-      boolean result = true;
-      result = result && getPlayerId()
-          .equals(other.getPlayerId());
-      result = result && (hasPos() == other.hasPos());
+      if (!getPlayerId()
+          .equals(other.getPlayerId())) return false;
+      if (hasPos() != other.hasPos()) return false;
       if (hasPos()) {
-        result = result && getPos()
-            .equals(other.getPos());
+        if (!getPos()
+            .equals(other.getPos())) return false;
       }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
     }
 
     @java.lang.Override
@@ -2155,6 +2323,7 @@ public final class Game {
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
+    @java.lang.Override
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
@@ -2162,6 +2331,7 @@ public final class Game {
     public static Builder newBuilder(com.jokerbee.protocol.Game.RoleSyncResp prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+    @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
           ? new Builder() : new Builder().mergeFrom(this);
@@ -2185,6 +2355,7 @@ public final class Game {
         return com.jokerbee.protocol.Game.internal_static_aft_RoleSyncResp_descriptor;
       }
 
+      @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return com.jokerbee.protocol.Game.internal_static_aft_RoleSyncResp_fieldAccessorTable
@@ -2207,6 +2378,7 @@ public final class Game {
                 .alwaysUseFieldBuilders) {
         }
       }
+      @java.lang.Override
       public Builder clear() {
         super.clear();
         playerId_ = "";
@@ -2220,15 +2392,18 @@ public final class Game {
         return this;
       }
 
+      @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return com.jokerbee.protocol.Game.internal_static_aft_RoleSyncResp_descriptor;
       }
 
+      @java.lang.Override
       public com.jokerbee.protocol.Game.RoleSyncResp getDefaultInstanceForType() {
         return com.jokerbee.protocol.Game.RoleSyncResp.getDefaultInstance();
       }
 
+      @java.lang.Override
       public com.jokerbee.protocol.Game.RoleSyncResp build() {
         com.jokerbee.protocol.Game.RoleSyncResp result = buildPartial();
         if (!result.isInitialized()) {
@@ -2237,6 +2412,7 @@ public final class Game {
         return result;
       }
 
+      @java.lang.Override
       public com.jokerbee.protocol.Game.RoleSyncResp buildPartial() {
         com.jokerbee.protocol.Game.RoleSyncResp result = new com.jokerbee.protocol.Game.RoleSyncResp(this);
         result.playerId_ = playerId_;
@@ -2249,32 +2425,39 @@ public final class Game {
         return result;
       }
 
+      @java.lang.Override
       public Builder clone() {
-        return (Builder) super.clone();
+        return super.clone();
       }
+      @java.lang.Override
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return (Builder) super.setField(field, value);
+        return super.setField(field, value);
       }
+      @java.lang.Override
       public Builder clearField(
           com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
+        return super.clearField(field);
       }
+      @java.lang.Override
       public Builder clearOneof(
           com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
+        return super.clearOneof(oneof);
       }
+      @java.lang.Override
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
+        return super.setRepeatedField(field, index, value);
       }
+      @java.lang.Override
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return (Builder) super.addRepeatedField(field, value);
+        return super.addRepeatedField(field, value);
       }
+      @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.jokerbee.protocol.Game.RoleSyncResp) {
           return mergeFrom((com.jokerbee.protocol.Game.RoleSyncResp)other);
@@ -2298,10 +2481,12 @@ public final class Game {
         return this;
       }
 
+      @java.lang.Override
       public final boolean isInitialized() {
         return true;
       }
 
+      @java.lang.Override
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -2323,6 +2508,7 @@ public final class Game {
       private java.lang.Object playerId_ = "";
       /**
        * <code>string playerId = 1;</code>
+       * @return The playerId.
        */
       public java.lang.String getPlayerId() {
         java.lang.Object ref = playerId_;
@@ -2338,6 +2524,7 @@ public final class Game {
       }
       /**
        * <code>string playerId = 1;</code>
+       * @return The bytes for playerId.
        */
       public com.google.protobuf.ByteString
           getPlayerIdBytes() {
@@ -2354,6 +2541,8 @@ public final class Game {
       }
       /**
        * <code>string playerId = 1;</code>
+       * @param value The playerId to set.
+       * @return This builder for chaining.
        */
       public Builder setPlayerId(
           java.lang.String value) {
@@ -2367,6 +2556,7 @@ public final class Game {
       }
       /**
        * <code>string playerId = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearPlayerId() {
         
@@ -2376,6 +2566,8 @@ public final class Game {
       }
       /**
        * <code>string playerId = 1;</code>
+       * @param value The bytes for playerId to set.
+       * @return This builder for chaining.
        */
       public Builder setPlayerIdBytes(
           com.google.protobuf.ByteString value) {
@@ -2389,17 +2581,19 @@ public final class Game {
         return this;
       }
 
-      private com.jokerbee.protocol.Game.PositionInfo pos_ = null;
+      private com.jokerbee.protocol.Game.PositionInfo pos_;
       private com.google.protobuf.SingleFieldBuilderV3<
           com.jokerbee.protocol.Game.PositionInfo, com.jokerbee.protocol.Game.PositionInfo.Builder, com.jokerbee.protocol.Game.PositionInfoOrBuilder> posBuilder_;
       /**
        * <code>.aft.PositionInfo pos = 2;</code>
+       * @return Whether the pos field is set.
        */
       public boolean hasPos() {
         return posBuilder_ != null || pos_ != null;
       }
       /**
        * <code>.aft.PositionInfo pos = 2;</code>
+       * @return The pos.
        */
       public com.jokerbee.protocol.Game.PositionInfo getPos() {
         if (posBuilder_ == null) {
@@ -2505,11 +2699,13 @@ public final class Game {
         }
         return posBuilder_;
       }
+      @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFieldsProto3(unknownFields);
+        return super.setUnknownFields(unknownFields);
       }
 
+      @java.lang.Override
       public final Builder mergeUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
@@ -2531,6 +2727,7 @@ public final class Game {
 
     private static final com.google.protobuf.Parser<RoleSyncResp>
         PARSER = new com.google.protobuf.AbstractParser<RoleSyncResp>() {
+      @java.lang.Override
       public RoleSyncResp parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -2548,6 +2745,7 @@ public final class Game {
       return PARSER;
     }
 
+    @java.lang.Override
     public com.jokerbee.protocol.Game.RoleSyncResp getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
@@ -2591,18 +2789,10 @@ public final class Game {
       "\001 \001(\t\022\036\n\003pos\030\002 \001(\0132\021.aft.PositionInfoB\035\n" +
       "\025com.jokerbee.protocolB\004Gameb\006proto3"
     };
-    com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
-        new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
-          public com.google.protobuf.ExtensionRegistry assignDescriptors(
-              com.google.protobuf.Descriptors.FileDescriptor root) {
-            descriptor = root;
-            return null;
-          }
-        };
-    com.google.protobuf.Descriptors.FileDescriptor
+    descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-        }, assigner);
+        });
     internal_static_aft_PlayerLogin_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_aft_PlayerLogin_fieldAccessorTable = new

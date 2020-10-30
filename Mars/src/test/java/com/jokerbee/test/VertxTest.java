@@ -42,7 +42,7 @@ public class VertxTest {
                 .put("authSource", "admin")
                 .put("db_name", "mars");
 
-        MongoClient mongo = MongoClient.createNonShared(vertx, config);
+        MongoClient mongo = MongoClient.create(vertx, config);
 
         mongo.save("PlayerEntity", config, res -> {
             if (res.succeeded()) {

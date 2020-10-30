@@ -12,3 +12,28 @@
 
 #### 存储
 目前使用了 MongoDB 作为存储, Redis 作为缓存.
+
+#### VM options
+
+hazelcast jdk15 环境启动所需参数
+
+```
+--add-modules
+java.se
+--add-exports
+java.base/jdk.internal.ref=ALL-UNNAMED
+--add-opens
+java.base/java.lang=ALL-UNNAMED
+--add-opens
+java.base/java.nio=ALL-UNNAMED
+--add-opens
+java.base/sun.nio.ch=ALL-UNNAMED
+--add-opens
+java.management/sun.management=ALL-UNNAMED
+--add-opens
+jdk.management/com.sun.management.internal=ALL-UNNAMED
+-verbose:gc
+-XX:+PrintGCDetails
+-Xms1024M
+-Xmx1024M
+```

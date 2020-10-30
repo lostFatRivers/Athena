@@ -20,11 +20,13 @@ public final class System {
 
     /**
      * <code>int32 code = 1;</code>
+     * @return The code.
      */
     int getCode();
 
     /**
      * <code>bytes body = 2;</code>
+     * @return The body.
      */
     com.google.protobuf.ByteString getBody();
   }
@@ -35,7 +37,7 @@ public final class System {
    *
    * Protobuf type {@code aft.ProtocolWrapper}
    */
-  public  static final class ProtocolWrapper extends
+  public static final class ProtocolWrapper extends
       com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:aft.ProtocolWrapper)
       ProtocolWrapperOrBuilder {
@@ -45,8 +47,14 @@ public final class System {
       super(builder);
     }
     private ProtocolWrapper() {
-      code_ = 0;
       body_ = com.google.protobuf.ByteString.EMPTY;
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new ProtocolWrapper();
     }
 
     @java.lang.Override
@@ -62,7 +70,6 @@ public final class System {
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
-      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -73,13 +80,6 @@ public final class System {
             case 0:
               done = true;
               break;
-            default: {
-              if (!parseUnknownFieldProto3(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
             case 8: {
 
               code_ = input.readInt32();
@@ -88,6 +88,13 @@ public final class System {
             case 18: {
 
               body_ = input.readBytes();
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
               break;
             }
           }
@@ -107,6 +114,7 @@ public final class System {
       return com.jokerbee.protocol.System.internal_static_aft_ProtocolWrapper_descriptor;
     }
 
+    @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return com.jokerbee.protocol.System.internal_static_aft_ProtocolWrapper_fieldAccessorTable
@@ -118,7 +126,9 @@ public final class System {
     private int code_;
     /**
      * <code>int32 code = 1;</code>
+     * @return The code.
      */
+    @java.lang.Override
     public int getCode() {
       return code_;
     }
@@ -127,12 +137,15 @@ public final class System {
     private com.google.protobuf.ByteString body_;
     /**
      * <code>bytes body = 2;</code>
+     * @return The body.
      */
+    @java.lang.Override
     public com.google.protobuf.ByteString getBody() {
       return body_;
     }
 
     private byte memoizedIsInitialized = -1;
+    @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized == 1) return true;
@@ -142,6 +155,7 @@ public final class System {
       return true;
     }
 
+    @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (code_ != 0) {
@@ -153,6 +167,7 @@ public final class System {
       unknownFields.writeTo(output);
     }
 
+    @java.lang.Override
     public int getSerializedSize() {
       int size = memoizedSize;
       if (size != -1) return size;
@@ -181,13 +196,12 @@ public final class System {
       }
       com.jokerbee.protocol.System.ProtocolWrapper other = (com.jokerbee.protocol.System.ProtocolWrapper) obj;
 
-      boolean result = true;
-      result = result && (getCode()
-          == other.getCode());
-      result = result && getBody()
-          .equals(other.getBody());
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
+      if (getCode()
+          != other.getCode()) return false;
+      if (!getBody()
+          .equals(other.getBody())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
     }
 
     @java.lang.Override
@@ -276,6 +290,7 @@ public final class System {
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
+    @java.lang.Override
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
@@ -283,6 +298,7 @@ public final class System {
     public static Builder newBuilder(com.jokerbee.protocol.System.ProtocolWrapper prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+    @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
           ? new Builder() : new Builder().mergeFrom(this);
@@ -310,6 +326,7 @@ public final class System {
         return com.jokerbee.protocol.System.internal_static_aft_ProtocolWrapper_descriptor;
       }
 
+      @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return com.jokerbee.protocol.System.internal_static_aft_ProtocolWrapper_fieldAccessorTable
@@ -332,6 +349,7 @@ public final class System {
                 .alwaysUseFieldBuilders) {
         }
       }
+      @java.lang.Override
       public Builder clear() {
         super.clear();
         code_ = 0;
@@ -341,15 +359,18 @@ public final class System {
         return this;
       }
 
+      @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return com.jokerbee.protocol.System.internal_static_aft_ProtocolWrapper_descriptor;
       }
 
+      @java.lang.Override
       public com.jokerbee.protocol.System.ProtocolWrapper getDefaultInstanceForType() {
         return com.jokerbee.protocol.System.ProtocolWrapper.getDefaultInstance();
       }
 
+      @java.lang.Override
       public com.jokerbee.protocol.System.ProtocolWrapper build() {
         com.jokerbee.protocol.System.ProtocolWrapper result = buildPartial();
         if (!result.isInitialized()) {
@@ -358,6 +379,7 @@ public final class System {
         return result;
       }
 
+      @java.lang.Override
       public com.jokerbee.protocol.System.ProtocolWrapper buildPartial() {
         com.jokerbee.protocol.System.ProtocolWrapper result = new com.jokerbee.protocol.System.ProtocolWrapper(this);
         result.code_ = code_;
@@ -366,32 +388,39 @@ public final class System {
         return result;
       }
 
+      @java.lang.Override
       public Builder clone() {
-        return (Builder) super.clone();
+        return super.clone();
       }
+      @java.lang.Override
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return (Builder) super.setField(field, value);
+        return super.setField(field, value);
       }
+      @java.lang.Override
       public Builder clearField(
           com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
+        return super.clearField(field);
       }
+      @java.lang.Override
       public Builder clearOneof(
           com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
+        return super.clearOneof(oneof);
       }
+      @java.lang.Override
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
+        return super.setRepeatedField(field, index, value);
       }
+      @java.lang.Override
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return (Builder) super.addRepeatedField(field, value);
+        return super.addRepeatedField(field, value);
       }
+      @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.jokerbee.protocol.System.ProtocolWrapper) {
           return mergeFrom((com.jokerbee.protocol.System.ProtocolWrapper)other);
@@ -414,10 +443,12 @@ public final class System {
         return this;
       }
 
+      @java.lang.Override
       public final boolean isInitialized() {
         return true;
       }
 
+      @java.lang.Override
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -439,12 +470,16 @@ public final class System {
       private int code_ ;
       /**
        * <code>int32 code = 1;</code>
+       * @return The code.
        */
+      @java.lang.Override
       public int getCode() {
         return code_;
       }
       /**
        * <code>int32 code = 1;</code>
+       * @param value The code to set.
+       * @return This builder for chaining.
        */
       public Builder setCode(int value) {
         
@@ -454,6 +489,7 @@ public final class System {
       }
       /**
        * <code>int32 code = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearCode() {
         
@@ -465,12 +501,16 @@ public final class System {
       private com.google.protobuf.ByteString body_ = com.google.protobuf.ByteString.EMPTY;
       /**
        * <code>bytes body = 2;</code>
+       * @return The body.
        */
+      @java.lang.Override
       public com.google.protobuf.ByteString getBody() {
         return body_;
       }
       /**
        * <code>bytes body = 2;</code>
+       * @param value The body to set.
+       * @return This builder for chaining.
        */
       public Builder setBody(com.google.protobuf.ByteString value) {
         if (value == null) {
@@ -483,6 +523,7 @@ public final class System {
       }
       /**
        * <code>bytes body = 2;</code>
+       * @return This builder for chaining.
        */
       public Builder clearBody() {
         
@@ -490,11 +531,13 @@ public final class System {
         onChanged();
         return this;
       }
+      @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFieldsProto3(unknownFields);
+        return super.setUnknownFields(unknownFields);
       }
 
+      @java.lang.Override
       public final Builder mergeUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
@@ -516,6 +559,7 @@ public final class System {
 
     private static final com.google.protobuf.Parser<ProtocolWrapper>
         PARSER = new com.google.protobuf.AbstractParser<ProtocolWrapper>() {
+      @java.lang.Override
       public ProtocolWrapper parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -533,6 +577,7 @@ public final class System {
       return PARSER;
     }
 
+    @java.lang.Override
     public com.jokerbee.protocol.System.ProtocolWrapper getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
@@ -557,18 +602,10 @@ public final class System {
       "\n\004code\030\001 \001(\005\022\014\n\004body\030\002 \001(\014B\037\n\025com.jokerb" +
       "ee.protocolB\006Systemb\006proto3"
     };
-    com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
-        new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
-          public com.google.protobuf.ExtensionRegistry assignDescriptors(
-              com.google.protobuf.Descriptors.FileDescriptor root) {
-            descriptor = root;
-            return null;
-          }
-        };
-    com.google.protobuf.Descriptors.FileDescriptor
+    descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-        }, assigner);
+        });
     internal_static_aft_ProtocolWrapper_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_aft_ProtocolWrapper_fieldAccessorTable = new

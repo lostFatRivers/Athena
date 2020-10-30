@@ -69,6 +69,9 @@ public class AppMain {
         return Future.future(configRetriever::getConfig);
     }
 
+    /**
+     * 部署 Verticle
+     */
     private static Future<Void> deployVerticle(JsonObject config) {
         configRetriever.close();
         Vertx vertx = bootContext.owner();
@@ -122,6 +125,9 @@ public class AppMain {
         }).compose(cf -> Future.succeededFuture());
     }
 
+    /**
+     * 初始化缓存管理器;
+     */
     private static void initCacheManager(JsonObject config, Promise<Void> pro) {
         try {
             CacheManager.getInstance().init(config);
@@ -132,6 +138,9 @@ public class AppMain {
         }
     }
 
+    /**
+     * 初始化 http 消息处理器;
+     */
     private static void initHttpHandlerManager(Vertx vertx, Promise<Void> pro) {
         try {
             HttpHandlerManager.getInstance().init(vertx);
@@ -142,6 +151,9 @@ public class AppMain {
         }
     }
 
+    /**
+     * 初始化 webSocket 消息处理器;
+     */
     private static void initWsHandlerManager(Vertx vertx, Promise<Void> pro) {
         try {
             WsHandlerManager.getInstance().init(vertx);
@@ -152,6 +164,9 @@ public class AppMain {
         }
     }
 
+    /**
+     * 添加关闭信号;
+     */
     private static void addShutdownOptional(Vertx vertx) {
         new Thread(() -> {
             try {
