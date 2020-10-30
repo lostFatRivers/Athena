@@ -12,6 +12,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.net.JksOptions;
 import io.vertx.core.shareddata.AsyncMap;
 import io.vertx.core.shareddata.SharedData;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class WsServerVerticle extends AbstractVerticle {
     private static final Logger logger = LoggerFactory.getLogger("WsServer");
 
-    private final AtomicInteger connectCounter = new AtomicInteger(0);
+    private static final AtomicInteger CONNECT_COUNTER = new AtomicInteger(0);
 
     private HttpServer httpServer;
 
@@ -57,12 +58,14 @@ public class WsServerVerticle extends AbstractVerticle {
     }
 
     private void websocketHandler(ServerWebSocket webSocket) {
+        logger.info("websocket connect: {}", webSocket.path());
         if (!webSocket.path().equals(Constants.WEB_SOCKET_PATH)) {
             webSocket.reject();
+            logger.info("websocket connect reject");
             return;
         }
         String binaryId = webSocket.binaryHandlerID();
-        logger.info("websocket connect open: {}, connectCount:{}", binaryId, connectCounter.incrementAndGet());
+        logger.info("websocket connect open: {}, connectCount:{}", binaryId, CONNECT_COUNTER.incrementAndGet());
 
         webSocket.write(new JsonObject().put("test1", "clustered").toBuffer());
         // 注册关闭回调
@@ -71,12 +74,13 @@ public class WsServerVerticle extends AbstractVerticle {
         webSocket.handler(buffer -> messageHandler(binaryId, buffer));
         webSocket.closeHandler(v -> {
             consumer.unregister();
-            logger.info("websocket closed binary id:{}, connectCount:{}", binaryId, connectCounter.decrementAndGet());
+            logger.info("websocket closed binary id:{}, connectCount:{}", binaryId, CONNECT_COUNTER.decrementAndGet());
         });
-        webSocket.exceptionHandler(e -> logger.error("websocket cache exception, binary id:{}", binaryId, e));
+        webSocket.exceptionHandler(e -> logger.error("websocket catch exception, binary id:{}, {}", binaryId, e.getMessage()));
     }
 
     private void closeSocket(ServerWebSocket webSocket) {
+        logger.info("close websocket by self.");
         webSocket.close();
     }
 
@@ -92,7 +96,7 @@ public class WsServerVerticle extends AbstractVerticle {
 
         Future.<AsyncMap<String, String>>future(p -> sharedData.getClusterWideMap(ClusterDataKey.SOCKET_ID_PLAYER, p))
                 .compose(map -> Future.<String>future(p -> map.get(socketBinaryHandlerId, p)))
-                .onSuccess(playerId -> dispatchMessageToPlayer(playerId, buffer))
+                .onSuccess(playerId -> dispatchMessageToPlayer(socketBinaryHandlerId, playerId, buffer))
                 .onFailure(tr -> tellToInitPlayer(socketBinaryHandlerId, buffer));
     }
 
@@ -120,7 +124,11 @@ public class WsServerVerticle extends AbstractVerticle {
     /**
      * 派送消息给玩家;
      */
-    private void dispatchMessageToPlayer(String playerId, Buffer buffer) {
+    private void dispatchMessageToPlayer(String socketBinaryHandlerId, String playerId, Buffer buffer) {
+        if (StringUtils.isEmpty(playerId)) {
+            tellToInitPlayer(socketBinaryHandlerId, buffer);
+            return;
+        }
         vertx.eventBus().request(playerId + Constants.PLAYER_MESSAGE_HANDLER_TAIL, buffer, res -> {
             if (res.succeeded()) {
                 logger.info("player consume message ok");

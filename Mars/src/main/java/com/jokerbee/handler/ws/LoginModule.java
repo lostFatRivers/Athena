@@ -12,7 +12,7 @@ public class LoginModule extends AbstractModule {
     @MessageHandler(code = Code.CS_ACCOUNT_LOGIN_VALUE)
     private void login(Player player, ProtocolWrapper wrapper) throws Exception {
         PlayerLogin loginMessage = PlayerLogin.parseFrom(wrapper.getBody());
-
+        logger.info("player login:{}", loginMessage);
     }
 
 }

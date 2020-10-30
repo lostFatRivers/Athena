@@ -1,15 +1,14 @@
 package com.jokerbee.verticle;
 
 import com.jokerbee.consts.Constants;
-import com.jokerbee.handler.WsHandlerManager;
 import com.jokerbee.player.Player;
 import com.jokerbee.player.PlayerManager;
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.buffer.Buffer;
+import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.core.eventbus.Message;
+import io.vertx.core.eventbus.MessageConsumer;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.mongo.MongoClient;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,18 +16,23 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class PlayerVerticle extends AbstractVerticle {
     private static final Logger logger = LoggerFactory.getLogger("Player");
-    private long counter = 0;
+
     private static final AtomicInteger aCounter = new AtomicInteger(0);
 
-    private MongoClient mongo;
+    private long counter = 0;
+    private MessageConsumer<JsonObject> consumer;
 
     @Override
-    public void start() {
-        vertx.eventBus().consumer(Constants.PLAYER_CREATE_KEY, this::createPlayer);
-        vertx.eventBus().consumer(Constants.PLAYER_DESTROY_KEY, this::destroyPlayer);
-        mongo = MongoClient.create(vertx, config());
-        counter = aCounter.getAndIncrement();
-        logger.info("Player handler start success.");
+    public void start(Promise<Void> promise) {
+        try {
+            consumer = vertx.eventBus().consumer(Constants.PLAYER_CREATE_KEY, this::createPlayer);
+            counter = aCounter.getAndIncrement();
+            addShutdownHook();
+            logger.info("Player verticle start success.{}", counter);
+            promise.complete();
+        } catch (Exception e) {
+            promise.fail(e);
+        }
     }
 
     private void createPlayer(Message<JsonObject> msg) {
@@ -36,33 +40,18 @@ public class PlayerVerticle extends AbstractVerticle {
         String socketId = body.getString("socketId");
         String playerId = body.getString("playerId");
 
-        Player player = new Player(vertx, playerId, socketId);
-        player.registerConsumers();
-
-        msg.reply(playerId);
+        Future.<Void>future(pro -> {
+            Player player = new Player(vertx, playerId, socketId, pro);
+            PlayerManager.getInstance().putPlayer(playerId, player);
+        }).onSuccess(v -> msg.reply(playerId))
+        .onFailure(v -> msg.fail(0, "create error"));
     }
 
-    private void destroyPlayer(Message<JsonObject> msg) {
-
+    private void addShutdownHook() {
+        context.addCloseHook(h -> {
+            consumer.unregister(h);
+            logger.info("close player verticle.{}", counter);
+        });
     }
-
-    private void initPlayer(Message<JsonObject> msg) {
-        JsonObject body = msg.body();
-        String socketId = body.getString("socketId");
-        Buffer buffer = Buffer.buffer(msg.body().getBinary("buffer"));
-        String playerId = body.getString("playerId");
-
-        Player player = PlayerManager.getInstance().getPlayer(playerId);
-        if (player == null) {
-            player = new Player(vertx, playerId, socketId);
-        } else {
-            if (StringUtils.isNotEmpty(player.getSocketId())) {
-                vertx.eventBus().send(player.getSocketId() + Constants.SOCKET_CLOSE_TAIL, "");
-            }
-        }
-        player.setSocketId(socketId);
-        WsHandlerManager.getInstance().onProtocol(player, buffer);
-    }
-
 
 }

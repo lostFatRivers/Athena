@@ -22,9 +22,6 @@ public interface Constants {
     /** 创建新玩家消息的 key */
     String PLAYER_CREATE_KEY = "playerCreate";
 
-    /** 玩家主动断开连接消息的 key */
-    String PLAYER_DESTROY_KEY = "playerLogout";
-
 
     /** 获取redis锁成功 */
     String LOCK_SUCCESS = "OK";

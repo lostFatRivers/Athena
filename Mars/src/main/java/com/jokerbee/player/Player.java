@@ -5,6 +5,7 @@ import com.jokerbee.consts.Constants;
 import com.jokerbee.handler.WsHandlerManager;
 import io.vertx.core.Context;
 import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.Message;
@@ -28,17 +29,24 @@ public class Player {
     private MessageConsumer<JsonObject> weepConsumer;
     private MessageConsumer<Buffer> messageConsumer;
 
-    public Player(Vertx vertx, String playerId, String socketId) {
+    public Player(Vertx vertx, String playerId, String socketId, Promise<Void> promise) {
         this.vertx = vertx;
         this.playerId = playerId;
         this.socketId = socketId;
         this.context = vertx.getOrCreateContext();
-        resetSocketPlayerMap(socketId).onFailure(err -> logger.error("create player set socket id error.", err));
+        resetSocketPlayerMap(socketId)
+                .onFailure(err -> {
+                    logger.error("create player set socket id error.");
+                    promise.fail(err);
+                })
+                .onSuccess(v -> registerConsumers(promise));
     }
 
-    public void registerConsumers() {
+    public void registerConsumers(Promise<Void> promise) {
+        logger.error("register Consumers sweep:{}, message:{}.", this.playerId + Constants.PLAYER_SWEEP_SOCKET_TAIL, this.playerId + Constants.PLAYER_MESSAGE_HANDLER_TAIL);
         weepConsumer = vertx.eventBus().consumer(this.playerId + Constants.PLAYER_SWEEP_SOCKET_TAIL, this::sweepSocketId);
         messageConsumer = vertx.eventBus().consumer(this.playerId + Constants.PLAYER_MESSAGE_HANDLER_TAIL, this::acceptMessage);
+        promise.complete();
     }
 
     private void sweepSocketId(Message<JsonObject> tMessage) {
@@ -64,6 +72,7 @@ public class Player {
                     }
                     if (StringUtils.isEmpty(this.socketId)) {
                         // 存入新的 socket - playerId 映射;
+                        logger.info("put new socketId success:{}", this.socketId);
                         map.put(newSocketId, this.playerId, p);
                         return;
                     }
@@ -73,8 +82,10 @@ public class Player {
                         if (oid.succeeded()) {
                             vertx.eventBus().send(oldSocketId + Constants.SOCKET_CLOSE_TAIL, "close");
                             logger.info("remove old socketId success:{}", oldSocketId);
+                            map.put(newSocketId, this.playerId, p);
                         } else {
-                            logger.error("remove old socketId error:{}", oldSocketId, oid.cause());
+                            logger.error("remove old socketId error:{}", oldSocketId);
+                            p.fail(oid.cause());
                         }
                     });
                 }));

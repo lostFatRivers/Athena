@@ -18,9 +18,9 @@ import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class AppMain {
     static {
@@ -31,6 +31,8 @@ public class AppMain {
 
     private static ConfigRetriever configRetriever;
     private static Context bootContext;
+
+    private static final List<String> deployIds = new ArrayList<>();
 
     public static void main(String[] args) {
         logger.info("Mars server start");
@@ -51,7 +53,8 @@ public class AppMain {
      * 创建集群模式 Vertx;
      */
     private static Future<Vertx> createClusterVertx() {
-        VertxOptions options = new VertxOptions().setClusterManager(new HazelcastClusterManager());
+        VertxOptions options = new VertxOptions().setClusterManager(new HazelcastClusterManager())
+                .setBlockedThreadCheckInterval(1000000000);
         return Future.future(pro -> Vertx.clusteredVertx(options, pro));
     }
 
@@ -94,30 +97,46 @@ public class AppMain {
                 // http 服务启动
                 if (ModuleType.Http.name().equals(eachModule)) {
                     Future<String> fu = Future.<Void>future(pro -> initHttpHandlerManager(vertx, pro))
-                            .compose(iv -> Future.future(promise -> vertx.deployVerticle(HttpServerVerticle.class.getName(),
-                                    new DeploymentOptions().setWorkerPoolName("HTTP").setInstances(4).setConfig(config.getJsonObject("http")), promise)));
+                            .compose(iv -> Future.<String>future(promise -> vertx.deployVerticle(HttpServerVerticle.class.getName(),
+                                    new DeploymentOptions().setWorkerPoolName("HTTP").setInstances(4).setWorkerPoolSize(1).setConfig(config.getJsonObject("http")), promise)))
+                            .compose(pid -> {
+                                deployIds.add(pid);
+                                return Future.succeededFuture();
+                            });
                     futureList.add(fu);
                 }
 
                 // websocket 服务启动
                 if (ModuleType.Websocket.name().equals(eachModule)) {
-                    Future<String> fu1 = Future.future(promise -> vertx.deployVerticle(WsServerVerticle.class.getName(),
-                            new DeploymentOptions().setWorkerPoolName("WebSocket").setInstances(4).setConfig(config.getJsonObject("websocket")), promise));
+                    Future<String> fu1 = Future.<String>future(promise -> vertx.deployVerticle(WsServerVerticle.class.getName(),
+                            new DeploymentOptions().setWorkerPoolName("WebSocket").setInstances(4).setWorkerPoolSize(1).setConfig(config.getJsonObject("websocket")), promise))
+                            .compose(pid -> {
+                                deployIds.add(pid);
+                                return Future.succeededFuture();
+                            });
                     futureList.add(fu1);
                 }
 
                 // player 服务启动
                 if (ModuleType.Player.name().equals(eachModule)) {
                     Future<String> fu2 = Future.<Void>future(pro -> initWsHandlerManager(vertx, pro))
-                            .compose(iv -> Future.future(promise -> vertx.deployVerticle(PlayerVerticle.class.getName(),
-                                    new DeploymentOptions().setWorkerPoolName("Player").setInstances(8).setConfig(config.getJsonObject("mongo")), promise)));
+                            .compose(iv -> Future.<String>future(promise -> vertx.deployVerticle(PlayerVerticle.class.getName(),
+                                    new DeploymentOptions().setWorkerPoolName("Player").setInstances(8).setWorkerPoolSize(1).setConfig(config.getJsonObject("mongo")), promise)))
+                            .compose(pid -> {
+                                deployIds.add(pid);
+                                return Future.succeededFuture();
+                            });
                     futureList.add(fu2);
                 }
 
                 // player bind 服务启动
                 if (ModuleType.PlayerBind.name().equals(eachModule)) {
-                    Future<String> fu3 = Future.future(promise -> vertx.deployVerticle(PlayerBindVerticle.class.getName(),
-                            new DeploymentOptions().setWorkerPoolName("PlayerBind").setInstances(1), promise));
+                    Future<String> fu3 = Future.<String>future(promise -> vertx.deployVerticle(PlayerBindVerticle.class.getName(),
+                            new DeploymentOptions().setWorkerPoolName("PlayerBind").setWorkerPoolSize(1).setInstances(1), promise))
+                            .compose(pid -> {
+                                deployIds.add(pid);
+                                return Future.succeededFuture();
+                            });
                     futureList.add(fu3);
                 }
             }
@@ -182,11 +201,15 @@ public class AppMain {
                         HttpHandlerManager.getInstance().close();
                         WsHandlerManager.getInstance().close();
                         CacheManager.getInstance().close();
+                        for (String eachId : deployIds) {
+                            vertx.undeploy(eachId);
+                        }
+                        TimeUnit.SECONDS.sleep(2);
                         vertx.close();
                         return;
                     }
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }).start();

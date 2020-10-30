@@ -9,8 +9,10 @@ import com.jokerbee.protocol.MessageCode;
 import com.jokerbee.protocol.System.ProtocolWrapper;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.Message;
+import io.vertx.core.eventbus.MessageConsumer;
 import io.vertx.core.json.JsonObject;
 import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
@@ -24,9 +26,18 @@ import org.slf4j.LoggerFactory;
 public class PlayerBindVerticle extends AbstractVerticle {
     private static final Logger logger = LoggerFactory.getLogger("PlayerBind");
 
+    private MessageConsumer<JsonObject> consumer;
+
     @Override
-    public void start() {
-        vertx.eventBus().consumer("bindPlayer", this::bindPlayer);
+    public void start(Promise<Void> promise) {
+        try {
+            consumer = vertx.eventBus().consumer("bindPlayer", this::bindPlayer);
+            addShutdownHook();
+            logger.info("Player bind verticle start success.");
+            promise.complete();
+        } catch (Exception e) {
+            promise.fail(e);
+        }
     }
 
     private void bindPlayer(Message<JsonObject> msg) {
@@ -120,8 +131,11 @@ public class PlayerBindVerticle extends AbstractVerticle {
         return Future.future(p -> vertx.eventBus().request(playerId + Constants.PLAYER_MESSAGE_HANDLER_TAIL, buffer, p));
     }
 
-    @Override
-    public void stop() {
-        logger.info("***************** PLAYER BIND SERVICE CLOSED !!!! *****************");
+    private void addShutdownHook() {
+        context.addCloseHook(h -> {
+            consumer.unregister(h);
+            logger.info("close player player bind verticle.");
+        });
     }
+
 }

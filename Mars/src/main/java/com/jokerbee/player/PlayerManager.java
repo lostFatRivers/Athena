@@ -1,6 +1,5 @@
 package com.jokerbee.player;
 
-import io.vertx.core.Vertx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,9 +17,9 @@ public enum PlayerManager {
         return INSTANCE;
     }
 
-    public void putPlayer(String account, Player player) {
-        logger.info("put new player:{}", account);
-        players.put(account, player);
+    public void putPlayer(String playerId, Player player) {
+        logger.info("put new player:{}", playerId);
+        players.put(playerId, player);
     }
 
     public Player getPlayer(String account) {
