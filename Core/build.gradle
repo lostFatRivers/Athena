@@ -1,4 +1,4 @@
-def vertxVersion = "3.8.4"
+def vertxVersion = "3.9.3"
 
 dependencies {
     compile "io.vertx:vertx-core:${vertxVersion}"

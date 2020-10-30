@@ -3,6 +3,8 @@ package com.jokerbee.verticle;
 import com.jokerbee.handler.HttpHandlerManager;
 import com.jokerbee.http.handler.AESDecodeHandler;
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Promise;
+import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
@@ -12,20 +14,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class HttpServerVerticle extends AbstractVerticle {
-    private static Logger logger = LoggerFactory.getLogger("HTTP");
+    private static final Logger logger = LoggerFactory.getLogger("HTTP");
 
+    private HttpServer httpServer;
     private String encryptKey;
 
     @Override
-    public void start() {
-        HttpServerOptions options = new HttpServerOptions();
-        encryptKey = config().getString("encryptKey");
-        vertx.createHttpServer(options).requestHandler(this.accepter())
-                .listen(config().getInteger("port"));
-        logger.info("Http server start, port:{}", config().getInteger("port"));
+    public void start(Promise<Void> promise) {
+        try {
+            HttpServerOptions options = new HttpServerOptions();
+            encryptKey = config().getString("encryptKey");
+            httpServer = vertx.createHttpServer(options).requestHandler(this.acceptor())
+                    .listen(config().getInteger("port"));
+            addShutdownHook();
+            logger.info("Http server start, port:{}", config().getInteger("port"));
+            promise.complete();
+        } catch (Exception e) {
+            promise.fail(e);
+        }
     }
 
-    private Router accepter() {
+    private Router acceptor() {
         Router router = Router.router(vertx);
 
         router.route().handler(BodyHandler.create())
@@ -43,6 +52,11 @@ public class HttpServerVerticle extends AbstractVerticle {
         return router;
     }
 
-
+    private void addShutdownHook() {
+        context.addCloseHook(h -> {
+            httpServer.close(h);
+            logger.info("close http service");
+        });
+    }
 
 }

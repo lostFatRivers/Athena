@@ -18,11 +18,11 @@ import java.util.stream.Stream;
 
 public enum WsHandlerManager {
     INSTANCE;
-    private static Logger logger = LoggerFactory.getLogger("Handler");
+    private static final Logger logger = LoggerFactory.getLogger("Handler");
 
     private Vertx vertx;
-    private Map<Integer, Method> handlerMap = new HashMap<>();
-    private Map<Integer, Object> hostMap = new HashMap<>();
+    private final Map<Integer, Method> handlerMap = new HashMap<>();
+    private final Map<Integer, Object> hostMap = new HashMap<>();
 
     public static WsHandlerManager getInstance() {
         return INSTANCE;
@@ -77,5 +77,10 @@ public enum WsHandlerManager {
         } catch (Exception e) {
             logger.error("protocol message handle error:{}", wrapper.getCode(), e);
         }
+    }
+
+    public void close() {
+        handlerMap.clear();
+        hostMap.clear();
     }
 }

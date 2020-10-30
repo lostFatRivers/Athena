@@ -24,4 +24,8 @@ public enum CacheManager {
     public RedisClient redis() {
         return redisClient;
     }
+
+    public void close() {
+        redisClient.shutdown();
+    }
 }

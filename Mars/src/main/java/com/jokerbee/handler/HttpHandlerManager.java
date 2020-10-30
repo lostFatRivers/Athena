@@ -17,11 +17,11 @@ import java.util.stream.Stream;
 
 public enum HttpHandlerManager {
     INSTANCE;
-    private static Logger logger = LoggerFactory.getLogger("Handler");
+    private static final Logger logger = LoggerFactory.getLogger("Handler");
 
     private Vertx vertx;
-    private Map<String, Method> handlerMap = new HashMap<>();
-    private Map<String, Object> hostMap = new HashMap<>();
+    private final Map<String, Method> handlerMap = new HashMap<>();
+    private final Map<String, Object> hostMap = new HashMap<>();
 
     public static HttpHandlerManager getInstance() {
         return INSTANCE;
@@ -77,5 +77,10 @@ public enum HttpHandlerManager {
             handlerMap.put(classRoutePath + annotation.value(), each);
             hostMap.put(classRoutePath + annotation.value(), instance);
         });
+    }
+
+    public void close() {
+        handlerMap.clear();
+        hostMap.clear();
     }
 }
